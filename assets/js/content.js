@@ -50,8 +50,8 @@ const SITE = {
     { icon: "mail", label: "Email", href: "mailto:boakyemmanuel1@outlook.com" },
     { icon: "file-text", label: "Resume", href: "https://drive.google.com/file/d/1AjgyI-1A7TCr4E3eBvwSgFHnkkBS5kgo/view" }
   ],
-  song: { title: "?Kwaku the Traveller", artist: "Black Sherif",
-          url: "https://open.spotify.com/search/Kwaku%20the%20Traveller%20Black%20Sherif" },
+  song: { title: "Top of the Morning", artist: "Black Sherif",
+          url: "https://open.spotify.com/track/7C2ld7CGhCilI6w07NG3jZ" },
   stack: [
     ["python","Python"],["r","R"],["pytorch","PyTorch"],["scikitlearn","scikit-learn"],["pandas","Pandas"],["numpy","NumPy"],
     ["huggingface","Hugging Face"],["langchain","LangChain"],["openai","OpenAI"],["claude","Claude"],["jupyter","Jupyter"],["matplotlib","Matplotlib"],

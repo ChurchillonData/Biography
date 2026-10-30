@@ -197,7 +197,7 @@ function vHero() {
         <a class="fav-title" href="${esc(s.song.url)}" target="_blank" rel="noopener" title="Open on Spotify">${tx(s.song.title)}</a>
         <div class="fav-artist">${esc(s.song.artist)}</div>
       </div>
-      <div class="fav-last">Last listened: ${esc(plain(s.song.title))} · ${esc(s.song.artist)}</div>
+      <div class="fav-last" id="favLast">Last listened: ${esc(plain(s.song.title))} · ${esc(s.song.artist)}</div>
       <button class="play" id="favPlay" type="button" aria-label="Play ${esc(plain(s.song.title))}">${ui("play-filled")}</button>
       <div class="fav-bar" id="favBar" hidden>
         <button class="fb-btn" id="favToggle" type="button" aria-label="Pause">${ui("pause-filled")}</button>
@@ -398,7 +398,17 @@ function favSet(state) {
   fav.dataset.state = state;
   clearInterval(favTimer); favTimer = null;
   if (state === "idle") favSec = 0;
-  if (state === "playing") favTimer = setInterval(() => { favSec++; const t = $("#favTime"); if (t) t.textContent = favFmt(favSec); }, 1000);
+  const a = SONG.audio;
+  if (a) {
+    if (state === "playing") a.play().catch(() => favSet("paused"));
+    else { a.pause(); if (state === "idle") a.currentTime = 0; }
+    favSec = Math.floor(a.currentTime);
+  } else if (state === "playing") {
+    favTimer = setInterval(() => { favSec++; const t = $("#favTime"); if (t) t.textContent = favFmt(favSec); }, 1000);
+    // First press before the clip has arrived: start it as soon as it does
+    songLookup().then(x => { if (x && $("#fav") && $("#fav").dataset.state === "playing") favSet("playing"); });
+  }
+  favCredit(state);
   $("#favBar").hidden = state === "idle";
   $("#favTime").textContent = favFmt(favSec);
   $("#favState").textContent = { idle: "Favorite", playing: "Now playing", paused: "Paused" }[state];
@@ -408,7 +418,52 @@ function favSet(state) {
   if (state === "playing" && document.activeElement && document.activeElement.id === "favPlay") tg.focus();
   if (state === "idle" && document.activeElement && document.activeElement.id === "favStop") $("#favPlay").focus();
 }
-function favReset() { clearInterval(favTimer); favTimer = null; favSec = 0; }
+function favReset() {
+  clearInterval(favTimer); favTimer = null; favSec = 0;
+  if (SONG.audio) { SONG.audio.pause(); SONG.audio.currentTime = 0; }
+}
+
+/* ---------- Music player: real sound from Apple's 30-second preview ----------
+   The visitor's browser asks Apple's public search API for the song's preview clip.
+   If that fails (offline, blocked), the player still works, just without sound. */
+const SONG = { audio: null, store: "", ask: null };
+function songLookup() {
+  if (SONG.ask) return SONG.ask;
+  SONG.ask = new Promise(resolve => {
+    const cb = "ebSong" + Date.now();
+    const tag = document.createElement("script");
+    let t;
+    const done = hit => { clearTimeout(t); try { delete window[cb]; } catch (e) {} tag.remove(); resolve(hit); };
+    t = setTimeout(() => done(null), 8000);
+    const low = v => String(v || "").toLowerCase();
+    window[cb] = data => done(((data && data.results) || []).find(r => r.previewUrl
+      && low(r.trackName).includes(low(SITE.song.title)) && low(r.artistName).includes(low(SITE.song.artist))) || null);
+    tag.onerror = () => done(null);
+    tag.src = "https://itunes.apple.com/search?" + new URLSearchParams({
+      term: SITE.song.artist + " " + SITE.song.title, media: "music", entity: "song", limit: "15", callback: cb });
+    document.head.appendChild(tag);
+  }).then(hit => {
+    if (!hit) { SONG.ask = null; return null; }   // let a later press try again
+    const a = new Audio();
+    a.preload = "auto";
+    a.src = hit.previewUrl;
+    a.addEventListener("timeupdate", () => { const t = $("#favTime"); if (t && !a.paused) t.textContent = favFmt(Math.floor(a.currentTime)); });
+    a.addEventListener("ended", () => favSet("idle"));
+    a.addEventListener("error", () => { SONG.audio = null; SONG.ask = null; });
+    SONG.audio = a; SONG.store = hit.trackViewUrl || "";
+    return a;
+  });
+  return SONG.ask;
+}
+// While the clip plays, the small line under the song credits Apple Music
+function favCredit(state) {
+  const el = $("#favLast"); if (!el) return;
+  if (SONG.audio && state !== "idle") {
+    el.innerHTML = `30-second preview from ${SONG.store ? `<a href="${esc(SONG.store)}" target="_blank" rel="noopener">Apple Music</a>` : "Apple Music"}`;
+  } else {
+    el.textContent = `Last listened: ${plain(SITE.song.title)} · ${SITE.song.artist}`;
+  }
+}
 
 /* ---------- Clocks ---------- */
 const fmt = tz => new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true, ...(tz ? { timeZone: tz } : {}) });
@@ -528,6 +583,8 @@ $("#yr").textContent = new Date().getFullYear();
 paintThemeBtn();
 render();
 loadGitHub();
+// Look up the song's preview clip once the page has settled, so the first press plays straight away
+(window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => songLookup());
 
 /* ---------- Footer: the GitHub plate drops in on a crooked thread that slowly straightens, and can be swung ---------- */
 (function hangingPlate() {
