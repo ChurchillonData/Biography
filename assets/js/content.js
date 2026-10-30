@@ -51,7 +51,10 @@ const SITE = {
     { icon: "file-text", label: "Resume", href: "https://drive.google.com/file/d/1AjgyI-1A7TCr4E3eBvwSgFHnkkBS5kgo/view" }
   ],
   song: { title: "Top of the Morning", artist: "Black Sherif",
-          url: "https://open.spotify.com/track/7C2ld7CGhCilI6w07NG3jZ", appleId: 1789008594 },
+          url: "https://open.spotify.com/track/7C2ld7CGhCilI6w07NG3jZ", appleId: 1789008594,
+          // Apple's official 30-second preview and the track's Apple Music page
+          preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ed/89/f0/ed89f005-f17f-7bea-5d5c-80c2fba1a8f6/mzaf_8557417655438868345.plus.aac.p.m4a",
+          store: "https://music.apple.com/us/album/top-of-the-morning/1789008400?i=1789008594" },
   stack: [
     ["python","Python"],["r","R"],["pytorch","PyTorch"],["scikitlearn","scikit-learn"],["pandas","Pandas"],["numpy","NumPy"],
     ["huggingface","Hugging Face"],["langchain","LangChain"],["openai","OpenAI"],["claude","Claude"],["jupyter","Jupyter"],["matplotlib","Matplotlib"],

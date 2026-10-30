@@ -398,6 +398,7 @@ function favSet(state) {
   fav.dataset.state = state;
   clearInterval(favTimer); favTimer = null;
   if (state === "idle") favSec = 0;
+  if (!SONG.audio && state === "playing") songLookup();
   const a = SONG.audio;
   if (a) {
     if (state === "playing") a.play().catch(() => favSet("paused"));
@@ -426,9 +427,29 @@ function favReset() {
 /* ---------- Music player: real sound from Apple's 30-second preview ----------
    The visitor's browser asks Apple's public search API for the song's preview clip.
    If that fails (offline, blocked), the player still works, just without sound. */
-const SONG = { audio: null, store: "", ask: null };
+const SONG = { audio: null, store: "", ask: null, fixedFailed: false };
+function songAudio(hit, fixed) {
+  const a = new Audio();
+  a.preload = "metadata";
+  a.src = hit.previewUrl;
+  a.addEventListener("timeupdate", () => { const t = $("#favTime"); if (t && !a.paused) t.textContent = favFmt(Math.floor(a.currentTime)); });
+  a.addEventListener("ended", () => favSet("idle"));
+  a.addEventListener("error", () => {
+    if (SONG.audio !== a) return;
+    SONG.audio = null; SONG.ask = null;
+    if (fixed) SONG.fixedFailed = true;
+    // If it failed mid-press, quietly try Apple's lookup and carry on
+    const fav = $("#fav");
+    if (fixed && fav && fav.dataset.state === "playing") songLookup().then(x => { if (x && $("#fav") && $("#fav").dataset.state === "playing") favSet("playing"); });
+  });
+  SONG.audio = a; SONG.store = hit.trackViewUrl || "";
+  return a;
+}
 function songLookup() {
   if (SONG.ask) return SONG.ask;
+  if (SITE.song.preview && !SONG.fixedFailed) {
+    return (SONG.ask = Promise.resolve(songAudio({ previewUrl: SITE.song.preview, trackViewUrl: SITE.song.store }, true)));
+  }
   const low = v => String(v || "").toLowerCase();
   const pick = data => ((data && data.results) || []).find(r => r.previewUrl && (r.trackId === SITE.song.appleId
     || (low(r.trackName).includes(low(SITE.song.title)) && low(r.artistName).includes(low(SITE.song.artist))))) || null;
@@ -454,14 +475,7 @@ function songLookup() {
   const tries = [() => viaScript(urls[0]), () => viaFetch(urls[0]), () => viaScript(urls[1]), () => viaFetch(urls[1])];
   SONG.ask = tries.reduce((chain, next) => chain.then(hit => hit || next()), Promise.resolve(null)).then(hit => {
     if (!hit) { SONG.ask = null; return null; }   // let a later press try again
-    const a = new Audio();
-    a.preload = "auto";
-    a.src = hit.previewUrl;
-    a.addEventListener("timeupdate", () => { const t = $("#favTime"); if (t && !a.paused) t.textContent = favFmt(Math.floor(a.currentTime)); });
-    a.addEventListener("ended", () => favSet("idle"));
-    a.addEventListener("error", () => { SONG.audio = null; SONG.ask = null; });
-    SONG.audio = a; SONG.store = hit.trackViewUrl || "";
-    return a;
+    return songAudio(hit, false);
   });
   return SONG.ask;
 }
@@ -594,7 +608,7 @@ paintThemeBtn();
 render();
 loadGitHub();
 // Look up the song's preview clip once the page has settled, so the first press plays straight away
-setTimeout(() => songLookup(), 800);
+songLookup();
 
 /* ---------- Footer: the GitHub plate drops in on a crooked thread that slowly straightens, and can be swung ---------- */
 (function hangingPlate() {
