@@ -429,20 +429,26 @@ function favReset() {
 const SONG = { audio: null, store: "", ask: null };
 function songLookup() {
   if (SONG.ask) return SONG.ask;
-  SONG.ask = new Promise(resolve => {
+  const low = v => String(v || "").toLowerCase();
+  const pick = data => ((data && data.results) || []).find(r => r.previewUrl
+    && low(r.trackName).includes(low(SITE.song.title)) && low(r.artistName).includes(low(SITE.song.artist))) || null;
+  const query = extra => "https://itunes.apple.com/search?" + new URLSearchParams({
+    term: SITE.song.artist + " " + SITE.song.title, media: "music", entity: "song", limit: "25", ...extra });
+  // Way 1: JSONP, the method Apple documents for calling the search API from a web page
+  const viaScript = () => new Promise(resolve => {
     const cb = "ebSong" + Date.now();
     const tag = document.createElement("script");
     let t;
     const done = hit => { clearTimeout(t); try { delete window[cb]; } catch (e) {} tag.remove(); resolve(hit); };
-    t = setTimeout(() => done(null), 8000);
-    const low = v => String(v || "").toLowerCase();
-    window[cb] = data => done(((data && data.results) || []).find(r => r.previewUrl
-      && low(r.trackName).includes(low(SITE.song.title)) && low(r.artistName).includes(low(SITE.song.artist))) || null);
+    t = setTimeout(() => done(null), 7000);
+    window[cb] = data => done(pick(data));
     tag.onerror = () => done(null);
-    tag.src = "https://itunes.apple.com/search?" + new URLSearchParams({
-      term: SITE.song.artist + " " + SITE.song.title, media: "music", entity: "song", limit: "15", callback: cb });
+    tag.src = query({ callback: cb });
     document.head.appendChild(tag);
-  }).then(hit => {
+  });
+  // Way 2: a plain request, in case the browser refuses the first
+  const viaFetch = () => fetch(query({}), { mode: "cors" }).then(r => r.ok ? r.json() : null).then(pick).catch(() => null);
+  SONG.ask = viaScript().then(hit => hit || viaFetch()).then(hit => {
     if (!hit) { SONG.ask = null; return null; }   // let a later press try again
     const a = new Audio();
     a.preload = "auto";
