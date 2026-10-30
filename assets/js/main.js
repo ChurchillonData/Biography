@@ -98,7 +98,7 @@ const MOCKS = {
       <div class="ml-side"><b>Risk flags</b><span>Rights impact</span><span class="a">Broad discretion</span><span class="a">Vague term</span></div>
     </div>`
 };
-const shot = p => p.image ? `<div class="shot"><img src="${p.image}" alt="${esc(p.title)} screenshot"></div>` : `<div class="shot">${MOCKS[p.mock]()}</div>`;
+const shot = p => p.image ? `<div class="shot is-img"><img src="${p.image}" alt="${esc(p.title)} screenshot" loading="lazy" decoding="async"></div>` : `<div class="shot">${MOCKS[p.mock]()}</div>`;
 
 /* ---------- Music player bits ---------- */
 const STOP_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2" fill="currentColor"/></svg>`;

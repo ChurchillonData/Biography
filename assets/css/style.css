@@ -167,7 +167,10 @@ main{padding-block:16px 8px; min-height:60vh}
 .pcard{border:1px solid var(--line); border-radius:20px; background:var(--card); overflow:hidden}
 .media{position:relative; aspect-ratio:16/10; max-width:100%; background:url("../img/pattern.svg") center/cover no-repeat; container-type:inline-size; display:grid; place-items:center}
 .shot{width:85%; height:84%; border-radius:2.6cqw; overflow:hidden; box-shadow:0 2cqw 6cqw rgba(10,20,45,.30); position:relative}
-.shot img{width:100%; height:100%; object-fit:cover}
+.shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top center}
+/* real screenshots keep their own shape: the frame shrinks to the image, so nothing is cropped */
+.shot.is-img{width:auto; height:auto; background:var(--card)}
+.shot.is-img img{width:auto; height:auto; max-width:85cqw; max-height:53cqw; object-fit:contain}
 .pbody{padding:22px 20px}
 .ptop{display:flex; justify-content:space-between; align-items:center; gap:12px}
 .ptitle{margin:0; font-size:22px; font-weight:700; letter-spacing:-.025em; line-height:1.2; min-width:0}
@@ -503,6 +506,7 @@ main{padding-block:16px 8px; min-height:60vh}
 @media (min-width:1024px){
   .wrap{max-width:900px; padding-left:max(32px, env(safe-area-inset-left,0px)); padding-right:max(32px, env(safe-area-inset-right,0px))}
   .media{aspect-ratio:16/9}
+  .shot.is-img img{max-height:48cqw}
 }
 
 @media (max-width:420px){ .name{font-size:28px} .clocks{font-size:12.5px} }
