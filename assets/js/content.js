@@ -21,8 +21,8 @@ const ASSETS = {
   "research": "assets/img/logos/retrieval-or-ranking.svg",
   "msft": "assets/img/projects/microsoft-logo.png",
   "arch": "assets/img/projects/retrieval-or-ranking-architecture.png",
-  "arch_size": [2545, 1515
-  ]
+  "arch_size": [2545, 1515],
+  "bp": "assets/img/projects/bp-logo.png"
 };
 
 const SITE = {

@@ -516,6 +516,9 @@ main{padding-block:16px 8px; min-height:60vh}
 .mc-main{flex:1; min-width:0; background:#f7f6f3}
 .mc-head{height:5.3125cqw; background:#fff; display:flex; align-items:center; gap:0.9562cqw; padding:0 1.3812cqw; border-bottom:1px solid #ececec; position:relative}
 .mc-mono{flex:none; border-radius:0.6375cqw; display:grid; place-items:center; font-weight:800; color:#fff; background:linear-gradient(135deg,#2f7d4a,#1d5c35)}
+.mc-tile{flex:none; width:3.4cqw; height:3.4cqw; border-radius:.6375cqw; background:#fff; display:grid; place-items:center; box-shadow:0 .2cqw .65cqw rgba(0,0,0,.1), 0 0 0 1px #efefef}
+.mc-tile img{display:block; width:2.4cqw; height:2.4cqw; object-fit:contain}
+.mc-sel-logo{flex:none; display:block; width:.956cqw; height:.956cqw; object-fit:contain}
 .mc-head .mc-mono{width:3.4cqw; height:3.4cqw; font-size:1.0625cqw; box-shadow:0 0.2125cqw 0.6375cqw rgba(0,0,0,.1)}
 .mc-head b{display:block; font-size:1.0625cqw; font-weight:800}
 .mc-head small{display:block; margin-top:0.2125cqw; font-size:0.6375cqw; color:#555; letter-spacing:0.0213cqw}
