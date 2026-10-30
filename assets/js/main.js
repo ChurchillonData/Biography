@@ -1,0 +1,573 @@
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const isTodo = s => typeof s === "string" && s.startsWith("?");
+const plain = s => isTodo(s) ? s.slice(1) : String(s);
+const tx = s => isTodo(s) ? `<span class="todo" title="Placeholder. Send the real detail.">${esc(s.slice(1))}</span>` : esc(s);
+const ui = n => ICONS.ui[n] || "";
+const logo = k => {
+  if (k.startsWith("t:")) return `<span class="lg lg-t">${ui(k.slice(2))}</span>`;
+  const b = ICONS.brands[k];
+  if (!b) return "";
+  return b.img ? `<img class="lg" data-k="${k}" src="${b.img}" alt="">` : `<span class="lg">${b.svg}</span>`;
+};
+function link(href, inner, cls, label) {
+  const aria = label ? ` aria-label="${esc(label)}" title="${esc(label)}"` : "";
+  if (!href) return `<a class="${cls}" href="#" data-missing="${esc(label || "This")}"${aria}>${inner}</a>`;
+  const ext = /^https?:/.test(href) ? ` target="_blank" rel="noopener"` : "";
+  return `<a class="${cls}" href="${esc(href)}"${ext}${aria}>${inner}</a>`;
+}
+const VERIFIED = (() => {
+  const d = (ICONS.ui.verified.match(/<path d="([^"]+)"/) || [])[1] || "";
+  return `<svg class="verified" viewBox="0 0 24 24" role="img" aria-label="Verified"><circle cx="12" cy="12" r="6.5" fill="#fff"/><path fill="var(--badge)" d="${d}"/></svg>`;
+})();
+
+function logoTile(l, alt, extra = "") {
+  if (l.img) return `<div class="exp-logo is-img${l.border ? " bordered" : ""}${extra}"><img src="${ASSETS[l.img] || l.img}" alt="${esc(alt)} logo"></div>`;
+  if (l.icon) return `<div class="exp-logo${extra}" style="background:${l.bg}">${ui(l.icon)}</div>`;
+  return `<div class="exp-logo${extra}" style="background:${l.bg}">${esc(l.text)}</div>`;
+}
+
+/* ---------- Banner (swap for a photo later) ---------- */
+const BANNER = `<svg viewBox="0 0 1200 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <defs>
+    <linearGradient id="bnG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1424"/><stop offset=".55" stop-color="#132a4d"/><stop offset="1" stop-color="#0a1322"/></linearGradient>
+    <radialGradient id="bnL" cx=".5" cy=".58" r=".5"><stop offset="0" stop-color="#3d74d6" stop-opacity=".5"/><stop offset="1" stop-color="#3d74d6" stop-opacity="0"/></radialGradient>
+    <pattern id="bnD" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#6f8fc4" opacity=".35"/></pattern>
+  </defs>
+  <rect width="1200" height="380" fill="url(#bnG)"/>
+  <rect width="1200" height="380" fill="url(#bnD)"/>
+  <ellipse cx="600" cy="220" rx="560" ry="200" fill="url(#bnL)"/>
+  <g stroke="#7fa6e6" stroke-opacity=".35" stroke-width="1.5" fill="#9cbcf0" fill-opacity=".55">
+    <path d="M70 300 L150 250 L120 170 M150 250 L240 280 L300 210 M240 280 L210 340" fill="none"/>
+    <circle cx="70" cy="300" r="5"/><circle cx="150" cy="250" r="7"/><circle cx="120" cy="170" r="4"/><circle cx="240" cy="280" r="6"/><circle cx="300" cy="210" r="4"/><circle cx="210" cy="340" r="4"/>
+  </g>
+  <g fill="#4f8fe8" fill-opacity=".28">
+    <rect x="930" y="250" width="26" height="90" rx="3"/><rect x="968" y="215" width="26" height="125" rx="3"/><rect x="1006" y="180" width="26" height="160" rx="3"/>
+    <rect x="1044" y="140" width="26" height="200" rx="3"/><rect x="1082" y="96" width="26" height="244" rx="3"/>
+  </g>
+  <text x="36" y="52" font-family="Geist Mono, ui-monospace, monospace" font-size="17" letter-spacing="4" fill="#a9bde0">LONDON / ACCRA</text>
+  <text x="600" y="214" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-weight="800" font-size="70" letter-spacing="-2" fill="#ffffff">RETRIEVE. RANK. EXPLAIN.</text>
+</svg>`;
+
+/* ---------- Mock screenshots (replace with real screenshots) ---------- */
+const MOCKS = {
+  green: () => `<div class="m m-green">
+      <div class="m-nav"><b>GreenLens</b><span><span>Companies</span><span>Claims</span><span>Method</span><span class="m-cta">Open app</span></span></div>
+      <div class="m-tag">Climate claim verification</div>
+      <div class="m-h">Climate talk is cheap.<em>Check the evidence.</em></div>
+      <div class="m-sub">Claims from ten oil and gas majors, matched to evidence and scored one by one.</div>
+      <div class="m-btns"><span>Explore claims</span><span>How it works</span></div>
+      <div class="m-stats"><div><b>10</b><small>Oil and gas majors</small></div><div><b>ClimateBERT</b><small>Claim detection</small></div><div><b>SBERT</b><small>Evidence reranking</small></div><div><b>GPT-4o-mini</b><small>Claim scoring</small></div></div>
+    </div>`,
+  paper: () => `<div class="m m-paper">
+      <div class="mp-top"><span>PREPRINT · ZENODO</span><span>2026</span></div>
+      <div class="mp-title">Retrieval or Ranking?</div>
+      <div class="mp-sub">Diagnosing the Dominant Bottleneck in a Hybrid Two-Staged Recommender on a Sparse Product Catalogue</div>
+      <div class="mp-auth">Emmanuel Boakye · Loughborough University</div>
+      <div class="mp-flow"><span>Catalogue</span><i>→</i><span>Retrieval</span><i>→</i><span>Ranking</span><i>→</i><span class="k">Top-K</span></div>
+      <div class="mp-abs">ABSTRACT</div><div class="mp-lines"><i></i><i></i><i></i><i></i><i style="width:72%"></i></div>
+    </div>`,
+  edgar: () => `<div class="m m-edgar">
+      <div class="me-bar"><b>EDGAR Risk</b><span>Form 10-K · Example Corp</span></div>
+      <div class="me-body">
+        <div class="me-card"><div class="me-h">Risk by category</div>
+          ${[["Litigation",72,"r"],["Regulatory",58,"a"],["Market",46,"a"],["Cybersecurity",40,"b"],["Liquidity",31,"b"],["Operational",27,"b"]].map(([n,w,c]) => `<div class="me-row"><span>${n}</span><i class="${c}" style="width:${w}%"></i></div>`).join("")}
+        </div>
+        <div class="me-col">
+          <div class="me-card"><div class="me-h">Risk across filings <em>Rising</em></div><div class="me-trend"><i style="height:38%"></i><i style="height:46%"></i><i style="height:58%"></i><i style="height:74%"></i></div></div>
+          <div class="me-card me-quote">“…pending <mark>litigation</mark> and <mark>regulatory</mark> review could <mark>adversely</mark> affect results…”</div>
+        </div>
+      </div>
+    </div>`,
+  vellum: () => `<div class="m m-vellum">
+      <div class="mv-bar"><b>Vellum-NLQ</b><span>Claims workspace</span></div>
+      <div class="mv-body">
+        <div class="mv-q">Average claim value by provider last quarter?</div>
+        <div class="mv-sql"><b>SELECT</b> provider, <b>AVG</b>(amount)
+<b>FROM</b> claims <b>WHERE</b> quarter = 'Q3'
+<b>GROUP BY</b> provider;</div>
+        <div class="mv-ans"><i style="height:3cqw"></i><i style="height:5cqw"></i><i style="height:4cqw"></i><i style="height:6.5cqw"></i><span><em>Governed SQL</em><em>Explained</em></span></div>
+      </div>
+    </div>`,
+  lex: () => `<div class="m m-lex">
+      <div class="ml-doc"><h5>A BILL</h5>
+        <p>An Act to provide for the regulation of <mark>digital platforms operating in Ghana</mark> and for related matters.</p>
+        <p>The Minister may, <mark class="r">without prior notice</mark>, direct a platform to remove content deemed <mark>harmful to public order</mark>.</p>
+      </div>
+      <div class="ml-side"><b>Risk flags</b><span>Rights impact</span><span class="a">Broad discretion</span><span class="a">Vague term</span></div>
+    </div>`
+};
+const shot = p => p.image ? `<div class="shot"><img src="${p.image}" alt="${esc(p.title)} screenshot"></div>` : `<div class="shot">${MOCKS[p.mock]()}</div>`;
+
+/* ---------- Music player bits ---------- */
+const STOP_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2" fill="currentColor"/></svg>`;
+const WAVE = Array.from({ length: 40 }, (_, i) => {
+  const h = [38, 62, 46, 88, 54, 30, 72, 100, 44, 66, 34, 80][(i * 7) % 12];
+  const dur = (0.7 + ((i * 13) % 9) / 10).toFixed(2);
+  const thick = i % 5 === 2 ? " class=\"t\"" : "";
+  return `<i${thick} style="height:${h}%;--d:${dur}s;--dl:-${((i * 17) % 10) / 10}s"></i>`;
+}).join("");
+
+/* ---------- Views ---------- */
+function vHero() {
+  const s = SITE;
+  const avatar = s.avatar ? `<img src="${s.avatar}" alt="${esc(s.name)}">` : `<span>${esc(s.initials)}</span>`;
+  return `<section class="hero">
+    <div class="banner">${ASSETS.banner ? `<img src="${ASSETS.banner}" alt="Laptop open on a café table beside an iced coffee">` : BANNER}</div>
+    <div class="hero-row">
+      <div class="avatar">${avatar}</div>
+      <div class="clocks"><div>YOUR <b data-clock="local">--:--:--</b></div><div>MY <b data-clock="mine">--:--:--</b></div><div class="clock-loc" id="clockLoc" title="${esc(s.myPlace)}"></div></div>
+    </div>
+    <h1 class="name">${esc(s.name)} ${VERIFIED}</h1>
+    <p class="role">${esc(s.role)}</p>
+    <div class="cta">
+      ${link(s.bookCall, ui("calendar") + "Book a call", "btn btn-dark", "Booking")}
+      ${link("mailto:" + s.email, ui("mail") + "Email me", "btn btn-light")}
+    </div>
+    <p class="bio">${esc(s.bio)}</p>
+    <div class="socials">${s.socials.map(x => link(x.href, ui(x.icon), "", x.label)).join("")}</div>
+    <div class="fav" id="fav" data-state="idle">
+      <div class="tt" aria-hidden="true">
+        <div class="plate"><div class="disc"></div><div class="spindle"></div></div>
+        <div class="arm"><div class="rod"><i class="stub"></i><i class="head"></i></div><i class="pivot"></i></div>
+      </div>
+      <div class="fav-meta">
+        <div class="fav-tag"><i></i><span id="favState">Favorite</span></div>
+        <a class="fav-title" href="${esc(s.song.url)}" target="_blank" rel="noopener" title="Open on Spotify">${tx(s.song.title)}</a>
+        <div class="fav-artist">${esc(s.song.artist)}</div>
+      </div>
+      <div class="fav-last">Last listened: ${esc(plain(s.song.title))} · ${esc(s.song.artist)}</div>
+      <button class="play" id="favPlay" type="button" aria-label="Play ${esc(plain(s.song.title))}">${ui("play-filled")}</button>
+      <div class="fav-bar" id="favBar" hidden>
+        <button class="fb-btn" id="favToggle" type="button" aria-label="Pause">${ui("pause-filled")}</button>
+        <button class="fb-btn" id="favStop" type="button" aria-label="Stop">${STOP_ICON}</button>
+        <div class="fb-wave" aria-hidden="true">${WAVE}</div>
+        <span class="fb-time" id="favTime" aria-live="off">0s</span>
+      </div>
+    </div>
+  </section>`;
+}
+function vStack() {
+  return `<section class="sec"><h2 class="label">Tech stack</h2>
+    <div class="stack">${SITE.stack.map(([k, n]) => `<span class="tile" tabindex="0" data-name="${esc(n)}" aria-label="${esc(n)}">${logo(k)}</span>`).join("")}</div>
+  </section>`;
+}
+function vExp(e) {
+  const logos = e.logos
+    ? `<div class="exp-logos">${e.logos.map(l => logoTile(l, l.name)).join(`<span class="exp-x" aria-hidden="true">×</span>`)}</div>`
+    : logoTile(e.logo, e.company);
+  return `<article class="exp">
+    ${logos}
+    <h3 class="exp-co">${esc(e.company)}</h3>
+    <p class="exp-role">${tx(e.role)}</p>
+    <p class="exp-dates">${tx(e.dates)}</p>
+    <p class="exp-loc">${tx(e.location)}</p>
+    <h4 class="h3">Technologies</h4>
+    <div class="pills">${e.tech.map(([k, n]) => `<span class="pill">${logo(k)}${esc(n)}</span>`).join("")}</div>
+    <ul class="bul">${e.bullets.map(b => `<li>${tx(b)}</li>`).join("")}</ul>
+  </article>`;
+}
+function vRes(r) {
+  return `<article class="exp">
+    ${r.logos ? `<div class="exp-logos">${r.logos.map(l => logoTile(l, l.name)).join(`<span class="exp-x" aria-hidden="true">×</span>`)}</div>` : logoTile(r.logo, r.where || r.title)}
+    <h3 class="exp-co">${esc(r.title)}</h3>
+    <p class="res-paper">${esc(r.paper)}</p>
+    <p class="exp-dates">${tx(r.dates)}</p>
+    <p class="exp-loc">${esc(r.where)}</p>
+    ${r.supervisor ? `<p class="exp-loc">Supervised by ${esc(r.supervisor)}</p>` : ""}
+    ${r.links.length ? `<div class="d-btns">${r.links.map(l => link(l.href, ui(l.icon) + esc(l.label), "btn-out", l.label)).join("")}</div>` : ""}
+    <h4 class="h3">Methods</h4>
+    <div class="pills">${r.tech.map(([k, n]) => `<span class="pill">${logo(k)}${esc(n)}</span>`).join("")}</div>
+    <ul class="bul">${r.bullets.map(b => `<li>${tx(b)}</li>`).join("")}</ul>
+  </article>`;
+}
+function vPubs() {
+  return `<div class="pubs"><h3 class="label">Publications</h3>${PUBLICATIONS.map(x => `<div class="pub">
+      <p>${esc(x.cite)} <span class="pub-t">${esc(x.title)}</span> ${esc(x.note)}</p>
+      <div class="pub-row"><span class="chip">Preprint · Zenodo</span><a class="btn-details" href="${esc(x.href)}" target="_blank" rel="noopener">Read paper ${ui("arrow-right")}</a></div>
+    </div>`).join("")}</div>`;
+}
+function vAward(a) {
+  const size = k => ASSETS[k + "_size"] || [1000, 476];
+  const ph = a.photos ? `<figure class="aw-photo"><div class="aw-imgs">${a.photos.map(x => {
+      const [w, h] = size(x.src);
+      return `<button class="aw-img" type="button" style="flex:${(w / h).toFixed(4)} 1 0" data-zoom="${x.src}" aria-label="View larger photo"><img src="${ASSETS[x.src]}" alt="${esc(x.alt)}" width="${w}" height="${h}" decoding="async"></button>`;
+    }).join("")}</div><figcaption>${esc(a.caption)}</figcaption></figure>` : "";
+  return `<article class="award">
+    ${logoTile(a.logo, a.issuer, " aw-logo")}
+    <div class="aw-body">
+      <div class="aw-top"><h3 class="aw-title">${esc(a.title)}</h3><span class="aw-year">${esc(a.year)}</span></div>
+      <p class="aw-meta">${esc(a.issuer)}</p>
+      ${a.desc ? `<p class="aw-desc">${esc(a.desc)}</p>` : ""}
+    </div>
+    ${ph}
+  </article>`;
+}
+function vCard(p) {
+  const uniq = [...new Map(p.tech.map(t => [t[0], t])).values()];
+  return `<article class="pcard">
+    <a class="media" href="#project-${p.slug}" aria-label="${esc(p.title)} details">${shot(p)}</a>
+    <div class="pbody">
+      <div class="ptop"><h3 class="ptitle"><a href="#project-${p.slug}">${esc(p.title)}</a></h3>
+        <div class="plinks">${link(p.links.site, ui("world"), "", p.links.siteLabel)}${link(p.links.repo, ui("brand-github"), "", "GitHub repository")}</div></div>
+      <p class="pdesc">${esc(p.short)}</p>
+      <p class="ptech">Technologies</p>
+      <div class="prow">
+        <div class="minis">${uniq.map(([k, n]) => `<span class="mini" title="${esc(n)}">${logo(k)}</span>`).join("")}</div>
+        <a class="btn-details" href="#project-${p.slug}">View Details ${ui("arrow-right")}</a>
+      </div>
+    </div>
+  </article>`;
+}
+function vGitHub() {
+  const g = GH || null;
+  const cells = g ? g.cells.map(d => d ? `<i data-l="${d.level}" title="${d.count} on ${d.date}"></i>` : `<i class="gh-pad"></i>`).join("")
+                  : `<i></i>`.repeat(371);
+  const months = g ? g.months.map(m => `<span style="left:${m.col * 17}px">${m.name}</span>`).join("") : "";
+  const weeks = g ? g.weeks : 53;
+  const summary = g ? `<b>${g.total.toLocaleString("en-GB")}</b> contributions · ${g.span}`
+                    : (GH === false ? "Activity unavailable right now" : "Loading activity");
+  return `<section class="sec" id="ghSec"><h2 class="label">GitHub activity</h2>
+    <div class="gh-scroll"><div class="gh-cal"><div class="gh-months" style="width:${weeks * 17 - 4}px">${months}</div><div class="gh-grid">${cells}</div></div></div>
+    <div class="gh-foot"><span>${summary}</span>
+      <span class="legend">Less <i style="background:var(--gh0)"></i><i style="background:var(--gh1)"></i><i style="background:var(--gh2)"></i><i style="background:var(--gh3)"></i><i style="background:var(--gh4)"></i> More</span></div>
+    <div class="gh-handle"><a href="https://github.com/${SITE.github}" target="_blank" rel="noopener">@${SITE.github}</a></div>
+  </section>`;
+}
+function vQuote() {
+  return `<section class="sec"><figure class="quote" style="margin:0">
+    <div class="q-in"><div class="q-mark" aria-hidden="true">“</div>
+      <blockquote class="q-text" style="margin-inline:0">${esc(SITE.quote.text)}</blockquote>
+      <figcaption class="q-by">— ${esc(SITE.quote.by)}</figcaption></div>
+    ${SITE.visitors ? `<div class="q-visit">You are the <b>${esc(SITE.visitors)}</b><sup>th</sup> visitor</div>` : ""}
+  </figure></section>`;
+}
+function vHome() {
+  const fx = EXPERIENCE.filter(e => e.featured), fp = PROJECTS.filter(p => p.featured);
+  return vHero() + vStack()
+    + `<section class="sec"><p class="eyebrow">Featured</p><h2 class="h2">Experience</h2>${fx.map(vExp).join("")}
+       <div class="more"><a class="btn-more" href="#experience">Show all work experiences</a></div></section>`
+    + `<section class="sec"><p class="eyebrow">Featured</p><h2 class="h2">Research</h2>${RESEARCH.filter(r => r.featured).map(vRes).join("")}
+       <div class="more"><a class="btn-more" href="#research">Show all research experience</a></div>${vPubs()}</section>`
+    + `<section class="sec"><p class="eyebrow">Featured</p><h2 class="h2">Projects</h2><div class="plist">${fp.map(vCard).join("")}</div>
+       <div class="more"><a class="btn-more" href="#projects">Show all projects</a></div></section>`
+    + `<section class="sec"><p class="eyebrow">Recognition</p><h2 class="h2">Awards &amp; Honours</h2><div class="awards">${AWARDS.map(vAward).join("")}</div></section>`
+    + vGitHub() + vQuote();
+}
+const backHome = `<a class="back" href="#home">${ui("arrow-left")}Back home</a>`;
+const vAllExp = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">All</p><h2 class="h2">Experience</h2>${EXPERIENCE.map(vExp).join("")}</section>`;
+const vAllRes = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">All</p><h2 class="h2">Research</h2>${RESEARCH.map(vRes).join("")}${vPubs()}</section>`;
+const vAllProj = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">All</p><h2 class="h2">Projects</h2><div class="plist">${PROJECTS.map(vCard).join("")}</div></section>`;
+function vProject(p) {
+  const L = p.links;
+  const names = [...new Set(p.tech.map(t => t[1]))];
+  const linkRow = (href, label) => href
+    ? `<li><a href="${esc(href)}" target="_blank" rel="noopener">${esc(label)}</a></li>`
+    : `<li><a href="#" data-missing="${esc(label)}"><span class="todo">${esc(label)}</span></a></li>`;
+  return `<a class="back" href="#projects">← Back to projects</a>
+    <div class="d-date">${tx(p.date)}</div>
+    <h1 class="d-title">${esc(p.title)}</h1>
+    <p class="d-desc">${esc(p.short)}</p>
+    <div class="d-btns">${link(L.site, ui("world") + "Visit site", "btn-out", L.siteLabel)}${link(L.repo, ui("brand-github") + "GitHub", "btn-out", "GitHub repository")}</div>
+    <div class="chips">${names.map(n => `<span class="chip">${esc(n)}</span>`).join("")}</div>
+    <div class="d-media"><div class="media">${shot(p)}</div></div>
+    <h2 class="d-h">Overview</h2>${p.overview.map(t => `<p class="d-p">${esc(t)}</p>`).join("")}
+    <h2 class="d-h">Tech Stack</h2><ul class="d-list">${names.map(n => `<li>${esc(n)}</li>`).join("")}</ul>
+    <h2 class="d-h">Links</h2><ul class="d-list">${linkRow(L.site, L.siteLabel)}${linkRow(L.repo, "Repository")}</ul>`;
+}
+
+/* ---------- GitHub calendar: real contributions for the last year ---------- */
+let GH = null;   // null while loading, false if it could not load, otherwise the built calendar
+function ghBuild(list) {
+  const days = list.slice(-371);
+  const first = new Date(days[0].date + "T12:00:00");
+  const pad = first.getDay();                       // each column starts on a Sunday
+  const cells = Array(pad).fill(null).concat(days);
+  const months = []; let lastMonth = -1;
+  cells.forEach((d, i) => {
+    if (!d || i % 7 !== 0 && i !== pad) return;
+    const m = new Date(d.date + "T12:00:00").getMonth();
+    if (m !== lastMonth) { months.push({ col: Math.floor(i / 7), name: new Date(d.date + "T12:00:00").toLocaleString("en-GB", { month: "short" }).toUpperCase() }); lastMonth = m; }
+  });
+  if (months.length > 1 && months[1].col - months[0].col < 3) months.shift();
+  const total = days.reduce((n, d) => n + (Number(d.count) || 0), 0);
+  const end = new Date(days[days.length - 1].date + "T12:00:00");
+  return { cells, months, total, weeks: Math.ceil(cells.length / 7), span: `${first.getFullYear()}–${String(end.getFullYear()).slice(2)}` };
+}
+async function loadGitHub() {
+  try {
+    const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(SITE.github)}?y=last`);
+    if (!res.ok) throw new Error(String(res.status));
+    const data = await res.json();
+    const list = (data.contributions || [])
+      .filter(d => d && /^\d{4}-\d{2}-\d{2}$/.test(d.date))
+      .map(d => ({ date: d.date, count: Number(d.count) || 0, level: Math.max(0, Math.min(4, Number(d.level) || 0)) }))
+      .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+    if (!list.length) throw new Error("no data");
+    GH = ghBuild(list);
+  } catch (err) {
+    GH = false;
+  }
+  const sec = document.getElementById("ghSec");
+  if (sec) sec.outerHTML = vGitHub();
+}
+
+/* ---------- Router ---------- */
+const app = $("#app");
+function render() {
+  favReset();
+  const h = decodeURIComponent(location.hash.slice(1));
+  let p;
+  if (h.startsWith("project-") && (p = PROJECTS.find(x => x.slug === h.slice(8)))) { app.innerHTML = vProject(p); document.title = p.title + " · Emmanuel Boakye"; }
+  else if (h === "projects") { app.innerHTML = vAllProj(); document.title = "Projects · Emmanuel Boakye"; }
+  else if (h === "research") { app.innerHTML = vAllRes(); document.title = "Research · Emmanuel Boakye"; }
+  else if (h === "experience") { app.innerHTML = vAllExp(); document.title = "Experience · Emmanuel Boakye"; }
+  else { app.innerHTML = vHome(); document.title = "Emmanuel Boakye"; }
+  tick();
+}
+window.addEventListener("hashchange", () => { render(); window.scrollTo(0, 0); });
+
+/* ---------- Music player: idle, playing, paused ---------- */
+let favSec = 0, favTimer = null;
+const favFmt = n => n < 60 ? n + "s" : `${Math.floor(n / 60)}:${String(n % 60).padStart(2, "0")}`;
+function favSet(state) {
+  const fav = $("#fav"); if (!fav) return;
+  fav.dataset.state = state;
+  clearInterval(favTimer); favTimer = null;
+  if (state === "idle") favSec = 0;
+  if (state === "playing") favTimer = setInterval(() => { favSec++; const t = $("#favTime"); if (t) t.textContent = favFmt(favSec); }, 1000);
+  $("#favBar").hidden = state === "idle";
+  $("#favTime").textContent = favFmt(favSec);
+  $("#favState").textContent = { idle: "Favorite", playing: "Now playing", paused: "Paused" }[state];
+  const tg = $("#favToggle");
+  tg.innerHTML = state === "playing" ? ui("pause-filled") : ui("play-filled");
+  tg.setAttribute("aria-label", state === "playing" ? "Pause" : "Play");
+  if (state === "playing" && document.activeElement && document.activeElement.id === "favPlay") tg.focus();
+  if (state === "idle" && document.activeElement && document.activeElement.id === "favStop") $("#favPlay").focus();
+}
+function favReset() { clearInterval(favTimer); favTimer = null; favSec = 0; }
+
+/* ---------- Clocks ---------- */
+const fmt = tz => new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true, ...(tz ? { timeZone: tz } : {}) });
+// Minutes a time zone is ahead of UTC right now (handles BST and GMT on its own)
+function tzOffsetMin(tz, d) {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: tz, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).formatToParts(d);
+  const g = t => +parts.find(x => x.type === t).value;
+  return Math.round((Date.UTC(g("year"), g("month") - 1, g("day"), g("hour") % 24, g("minute")) - Math.floor(d.getTime() / 60000) * 60000) / 60000);
+}
+// Map pin: solid pin with a white centre
+const PIN = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728z"/><circle cx="12" cy="11" r="3.1" fill="#fff"/></svg>`;
+// "London, United Kingdom" or "London · 8h behind you"
+function locLine() {
+  const d = new Date();
+  let diff = 0;
+  try { diff = tzOffsetMin(SITE.myTimeZone, d) + d.getTimezoneOffset(); } catch (err) {}
+  const m = Math.abs(diff), h = Math.floor(m / 60), mm = m % 60;
+  const gap = [h ? h + "h" : "", mm ? mm + "m" : ""].filter(Boolean).join(" ");
+  const label = diff === 0 ? SITE.myPlace : `${SITE.myCity} · ${gap} ${diff > 0 ? "ahead of" : "behind"} you`;
+  return { key: label, html: `${PIN}<span>${esc(label)}</span>` };
+}
+function tick() {
+  document.querySelectorAll("[data-clock]").forEach(el => { el.textContent = fmt(el.dataset.clock === "mine" ? SITE.myTimeZone : null); });
+  const loc = document.getElementById("clockLoc");
+  if (loc) { const l = locLine(); if (loc.dataset.key !== l.key) { loc.innerHTML = l.html; loc.dataset.key = l.key; } }
+}
+setInterval(tick, 1000);
+
+/* ---------- Theme ---------- */
+const root = document.documentElement;
+const mq = window.matchMedia("(prefers-color-scheme: dark)");
+const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : mq.matches;
+const paintThemeBtn = () => { $("#themeBtn").innerHTML = isDark() ? ui("sun") : ui("moon"); };
+try { const saved = localStorage.getItem("eb-theme"); if (saved === "dark" || saved === "light") root.dataset.theme = saved; } catch (e) {}
+$("#themeBtn").addEventListener("click", () => {
+  const next = isDark() ? "light" : "dark";
+  root.dataset.theme = next;
+  try { localStorage.setItem("eb-theme", next); } catch (e) {}
+  paintThemeBtn();
+});
+mq.addEventListener && mq.addEventListener("change", paintThemeBtn);
+new MutationObserver(paintThemeBtn).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+
+/* ---------- Toast + clicks ---------- */
+function copyText(text) {
+  const fallback = () => {
+    try {
+      const t = document.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;opacity:0;top:0;left:0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    } catch (err) { return false; }
+  };
+  try { return navigator.clipboard.writeText(text).then(() => true, () => fallback()); }
+  catch (err) { return Promise.resolve(fallback()); }
+}
+let toastT;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 2200); }
+document.addEventListener("click", e => {
+  const miss = e.target.closest("[data-missing]");
+  if (miss) { e.preventDefault(); toast(`${miss.dataset.missing} link not added yet`); return; }
+  const mail = e.target.closest('a[href^="mailto:"]');
+  if (mail) {
+    // Opens the visitor's mail app and also copies the address, for devices with no mail app set up
+    const addr = mail.getAttribute("href").slice(7);
+    copyText(addr).then(ok => toast(ok ? `Email copied: ${addr}` : addr));
+  }
+  if (e.target.closest("#favPlay")) { favSet("playing"); return; }
+  if (e.target.closest("#favToggle")) { favSet($("#fav").dataset.state === "playing" ? "paused" : "playing"); return; }
+  if (e.target.closest("#favStop")) { favSet("idle"); return; }
+  const zoom = e.target.closest("[data-zoom]");
+  if (zoom) { const im = zoom.querySelector("img"); $("#lbImg").src = im.src; $("#lbImg").alt = im.alt; $("#lb").hidden = false; root.style.overflow = "hidden"; return; }
+  if (e.target.closest("#lb")) { $("#lb").hidden = true; root.style.overflow = ""; return; }
+  const sxItem = e.target.closest(".sx-item");
+  if (sxItem) closeSearch();
+});
+
+/* ---------- Search ---------- */
+const sx = $("#sx"), sxInput = $("#sxInput"), sxList = $("#sxList");
+const INDEX = [
+  ...[["Home", "#home"], ["Experience", "#experience"], ["Research", "#research"], ["Projects", "#projects"]].map(([l, h]) => ({ g: "Pages", l, h })),
+  ...RESEARCH.map(r => ({ g: "Research", l: r.title, s: r.dates, h: "#research", k: r.paper + " " + r.bullets.join(" ") })),
+  ...PROJECTS.map(p => ({ g: "Projects", l: p.title, h: "#project-" + p.slug, k: p.short + " " + p.tech.map(t => t[1]).join(" ") })),
+  ...EXPERIENCE.map(e => ({ g: "Experience", l: e.company, s: plain(e.role), h: "#experience", k: e.bullets.join(" ") })),
+  ...AWARDS.map(a => ({ g: "Awards", l: a.title, s: a.year, h: "#home", k: a.issuer })),
+  ...SITE.socials.filter(s => s.href).map(s => ({ g: "Links", l: s.label, h: s.href, ext: true }))
+];
+function drawSearch() {
+  const q = sxInput.value.trim().toLowerCase();
+  const hits = INDEX.filter(i => !q || (i.l + " " + (i.s || "") + " " + (i.k || "")).toLowerCase().includes(q));
+  if (!hits.length) { sxList.innerHTML = `<div class="sx-empty">No matches for “${esc(sxInput.value)}”.</div>`; return; }
+  let out = "", g = "";
+  hits.forEach(i => {
+    if (i.g !== g) { g = i.g; out += `<div class="sx-group">${g}</div>`; }
+    const ext = i.ext && /^https?:/.test(i.h) ? ` target="_blank" rel="noopener"` : "";
+    out += `<a class="sx-item" href="${esc(i.h)}"${ext}><span>${esc(i.l)}</span>${i.s ? `<small>${esc(i.s)}</small>` : ""}</a>`;
+  });
+  sxList.innerHTML = out;
+}
+function openSearch() { sx.hidden = false; sxInput.value = ""; drawSearch(); root.style.overflow = "hidden"; setTimeout(() => sxInput.focus(), 20); }
+function closeSearch() { sx.hidden = true; root.style.overflow = ""; }
+$("#dockSearch").addEventListener("click", openSearch);
+sx.addEventListener("click", e => { if (e.target === sx) closeSearch(); });
+sxInput.addEventListener("input", drawSearch);
+sxInput.addEventListener("keydown", e => { if (e.key === "Enter") { const a = sxList.querySelector(".sx-item"); if (a) { a.click(); } } });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !$("#lb").hidden) { $("#lb").hidden = true; root.style.overflow = ""; }
+  else if (e.key === "Escape" && !sx.hidden) closeSearch();
+  else if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && sx.hidden && !/input|textarea/i.test(document.activeElement.tagName))) { e.preventDefault(); openSearch(); }
+});
+
+/* ---------- Boot ---------- */
+$("#dockHome").innerHTML = ui("home");
+$("#dockSearch").innerHTML = ui("search") + "Search";
+$("#sxIcon").innerHTML = ui("search");
+$("#holo").innerHTML = `<span class="holo-fx" aria-hidden="true"><i class="hs1"></i><i class="hs3"></i><i class="hs2"></i><span class="hs-water"></span><span class="hs-gloss"></span></span>${ui("github-filled")}<span class="holo-label">GitHub</span>`;
+$("#yr").textContent = new Date().getFullYear();
+paintThemeBtn();
+render();
+loadGitHub();
+
+/* ---------- Footer: the GitHub plate drops in on a crooked thread that slowly straightens, and can be swung ---------- */
+(function hangingPlate() {
+  const stage = $("#hang"), svg = $("#hangSvg"), path = $("#hangPath"), body = $("#hangBody"), link = $("#holo");
+  if (!stage || !body || !path) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // px and seconds. The anchor sits above the visible area, so the thread has no visible start.
+  const AY = -46, LT = 172, L0 = 8, G = 642, K = 620, D = 27, DRAG = 0.32, SLACK0 = 0.15, MAXA = 0.9;
+  let W = 0, BW = 0;
+  let L = L0, vL = 0, th = -0.2, w = 0, t = 0, last = 0;
+  let released = false, visible = false, raf = 0, relT = 0, catchT = -1;
+  let slack = SLACK0, ph1 = 0, ph2 = 1.7, drag = null, moved = false, wEma = 0;
+  const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  const leff = () => LT * (1 - slack);    // a crooked thread reaches less far than a straight one
+  function measure() { W = stage.clientWidth; BW = body.offsetWidth; svg.setAttribute("viewBox", `0 0 ${W} ${stage.clientHeight}`); }
+  function draw(amp) {
+    const cx = W / 2, ex = cx + L * Math.sin(th), ey = AY + L * Math.cos(th);
+    const a = -th * 0.6;                    // the plate tilts with the thread, a little behind it
+    body.style.transform = `translate(${(ex - BW / 2).toFixed(2)}px, ${ey.toFixed(2)}px) rotate(${a.toFixed(4)}rad)`;
+    const tx = ex + 8 * Math.sin(a), ty = ey - 8 * Math.cos(a);   // top of the eyelet
+    const dx = tx - cx, dy = ty - AY, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    let d = "";
+    for (let i = 0, N = 34; i <= N; i++) {
+      const s = i / N, env = Math.pow(Math.sin(Math.PI * s), 1.1);
+      const off = amp * env * (0.65 * Math.sin(2 * Math.PI * 2.3 * s + ph1) + 0.35 * Math.sin(2 * Math.PI * 4.2 * s + ph2));
+      d += (i ? " L" : "M") + (cx + dx * s + nx * off).toFixed(1) + " " + (AY + dy * s + ny * off).toFixed(1);
+    }
+    path.setAttribute("d", d);
+  }
+  function step(now) {
+    raf = 0;
+    if (!visible && !drag) { last = 0; return; }
+    const dt = last ? Math.min(0.033, (now - last) / 1000) : 1 / 60;
+    last = now; t += dt;
+    if (released && !drag) {
+      relT += dt;
+      // a moment after it first catches, the kinks work out over a few seconds and the plate lowers a little
+      if (catchT >= 0) slack = SLACK0 * (1 - ease(Math.min(1, Math.max(0, (relT - catchT - 0.7) / 2.9))));
+      for (let i = 0; i < 2; i++) {
+        const h = dt / 2, Le = leff();
+        const aL = G * Math.cos(th) - (L > Le ? K * (L - Le) + D * vL : 0);   // free fall while slack, springy once taut
+        vL += aL * h; L += vL * h;
+        if (catchT < 0 && L >= Le) catchT = relT;
+        const breeze = reduce ? 0 : 0.12 * Math.sin(t * 2 * Math.PI / 6.5);
+        let aTh = -(G / Math.max(L, 70)) * Math.sin(th) - (reduce ? 1.2 : DRAG) * w + breeze;
+        if (Math.abs(th) > MAXA) aTh -= (th - Math.sign(th) * MAXA) * 140 + w * 3;   // a soft limit keeps a hard throw on screen
+        w += aTh * h; th += w * h;
+      }
+    }
+    const fall = Math.min(1, Math.abs(vL) / 300);
+    ph1 += dt * (0.45 + 5 * fall); ph2 -= dt * (0.35 + 4 * fall);
+    draw(24 * (slack / SLACK0) + Math.max(0, leff() - L) * 0.4);
+    raf = requestAnimationFrame(step);
+  }
+  const run = () => { if (!raf && (released || drag) && (visible || drag)) raf = requestAnimationFrame(step); };
+  measure();
+  if (reduce) { L = LT; slack = 0; th = 0; released = true; catchT = 0; }
+  draw(reduce ? 0 : 24);
+  window.addEventListener("resize", () => { measure(); draw(24 * (slack / SLACK0)); });
+  window.addEventListener("load", measure);
+  new IntersectionObserver(entries => {
+    const e = entries[0];
+    visible = e.isIntersecting;
+    if (!released && e.intersectionRatio >= 0.6) setTimeout(() => { released = true; run(); }, 260);
+    run();
+  }, { threshold: [0, 0.6, 1] }).observe(stage);
+
+  // Grab and swing: the plate follows the pointer on its thread, then carries on with the speed you let go at
+  body.addEventListener("pointerdown", e => {
+    if (!released || (e.button !== undefined && e.button !== 0)) return;
+    const r = stage.getBoundingClientRect(), cx = W / 2;
+    const ex = cx + L * Math.sin(th), ey = AY + L * Math.cos(th);
+    drag = { id: e.pointerId, ox: e.clientX - r.left - ex, oy: e.clientY - r.top - ey, sx: e.clientX, sy: e.clientY, lt: performance.now() };
+    moved = false; wEma = 0;
+    try { body.setPointerCapture(e.pointerId); } catch (err) {}
+    body.classList.add("is-grabbed");
+    run();
+  });
+  body.addEventListener("pointermove", e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 4) moved = true;
+    const r = stage.getBoundingClientRect();
+    const dx = e.clientX - r.left - drag.ox - W / 2, dy = Math.max(1, e.clientY - r.top - drag.oy - AY);
+    const nth = Math.max(-MAXA, Math.min(MAXA, Math.atan2(dx, dy)));
+    const now = performance.now(), sec = Math.max(1, now - drag.lt) / 1000;
+    wEma = wEma * 0.55 + ((nth - th) / sec) * 0.45;
+    th = nth; L = Math.min(Math.hypot(dx, dy), leff()); vL = 0; w = 0; drag.lt = now;
+  });
+  const endDrag = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    drag = null; body.classList.remove("is-grabbed");
+    w = Math.max(-4.5, Math.min(4.5, wEma));
+    run();
+  };
+  body.addEventListener("pointerup", endDrag);
+  body.addEventListener("pointercancel", endDrag);
+  // a drag is a swing, not a click
+  link.addEventListener("click", e => { if (moved) { e.preventDefault(); moved = false; } });
+  // a mouse brushing past gives it a small push
+  stage.addEventListener("pointerenter", e => {
+    if (e.pointerType !== "mouse" || !released || drag) return;
+    const r = body.getBoundingClientRect();
+    w += (e.clientX < r.left + r.width / 2 ? 1 : -1) * 0.45;
+    run();
+  });
+})();
