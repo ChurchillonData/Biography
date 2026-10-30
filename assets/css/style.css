@@ -113,9 +113,24 @@ main{padding-block:16px 8px; min-height:60vh}
 .play{grid-area:play; width:44px; height:44px; border-radius:50%; background:var(--play); color:#fff; display:grid; place-items:center; transition:transform .15s}
 .play:hover{transform:scale(1.05)}
 .play{border:0; cursor:pointer}
-.fav-last a{color:inherit; text-decoration:underline; text-underline-offset:2px}
 .fav-title:hover{text-decoration:underline; text-underline-offset:3px}
 .fav:not([data-state="idle"]) .play{display:none}
+/* While playing: a thin ring that fills over the clip, with a small equaliser inside. Tap to pause or resume. */
+.fav-ring{grid-area:play; display:none; position:relative; width:44px; height:44px; padding:0; border:0; border-radius:50%; background:transparent; color:var(--play); cursor:pointer}
+.fav:not([data-state="idle"]) .fav-ring{display:grid; place-items:center; animation:ringIn .4s cubic-bezier(.3,.7,.2,1)}
+@keyframes ringIn{from{opacity:0; transform:scale(.6)}}
+.fav-ring svg{position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); overflow:visible}
+.fav-ring circle{fill:none; stroke-width:2.5}
+.rg-track{stroke:var(--line)}
+.rg-fill{stroke:currentColor; stroke-linecap:round; stroke-dasharray:100; stroke-dashoffset:100}
+.rg-eq{display:flex; align-items:flex-end; gap:2.5px; height:14px}
+.rg-eq i{width:3px; height:100%; border-radius:2px; background:currentColor; transform-origin:50% 100%; animation:eq .9s ease-in-out infinite}
+.rg-eq i:nth-child(2){animation-duration:.7s; animation-delay:-.35s}
+.rg-eq i:nth-child(3){animation-duration:1.1s; animation-delay:-.6s}
+@keyframes eq{0%,100%{transform:scaleY(.3)} 50%{transform:scaleY(1)}}
+.fav[data-state="paused"] .rg-eq i{animation-play-state:paused}
+@media (hover:hover){.fav-ring:hover .rg-track{stroke:var(--faint)}}
+.fav-ring:focus-visible{outline:2px solid var(--play); outline-offset:3px}
 .fav-bar{grid-area:bar; margin-top:14px; display:flex; align-items:center; gap:10px; height:56px; padding:0 16px 0 10px; border-radius:16px; background:var(--play); color:#fff; animation:barIn .35s cubic-bezier(.3,.7,.2,1)}
 @keyframes barIn{from{opacity:0; transform:translateY(-6px)}}
 .fb-btn{flex:none; width:36px; height:36px; border-radius:50%; display:grid; place-items:center; padding:0; cursor:pointer;
@@ -637,7 +652,7 @@ main{padding-block:16px 8px; min-height:60vh}
 
 @media (max-width:420px){ .name{font-size:28px} .clocks{font-size:12.5px} }
 @media (prefers-reduced-motion: reduce){
-  .fav .disc, .fav .spindle, .fb-wave i, .fav-bar{animation:none !important}
+  .fav .disc, .fav .spindle, .fb-wave i, .fav-bar, .rg-eq i, .fav-ring{animation:none !important}
   .holo{--t:8.5s}
   .arm, .tile::after, .toast{transition:none}
 }

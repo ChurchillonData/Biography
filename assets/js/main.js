@@ -199,6 +199,10 @@ function vHero() {
       </div>
       <div class="fav-last" id="favLast">Last listened: ${esc(plain(s.song.title))} · ${esc(s.song.artist)}</div>
       <button class="play" id="favPlay" type="button" aria-label="Play ${esc(plain(s.song.title))}">${ui("play-filled")}</button>
+      <button class="fav-ring" id="favRing" type="button" aria-label="Pause">
+        <svg viewBox="0 0 44 44" aria-hidden="true"><circle class="rg-track" cx="22" cy="22" r="20.5"/><circle class="rg-fill" id="favArc" cx="22" cy="22" r="20.5" pathLength="100"/></svg>
+        <span class="rg-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
       <div class="fav-bar" id="favBar" hidden>
         <button class="fb-btn" id="favToggle" type="button" aria-label="Pause">${ui("pause-filled")}</button>
         <button class="fb-btn" id="favStop" type="button" aria-label="Stop">${STOP_ICON}</button>
@@ -409,7 +413,7 @@ function favSet(state) {
     // First press before the clip has arrived: start it as soon as it does
     songLookup().then(x => { if (x && $("#fav") && $("#fav").dataset.state === "playing") favSet("playing"); });
   }
-  favCredit(state);
+  favArc();
   $("#favBar").hidden = state === "idle";
   $("#favTime").textContent = favFmt(favSec);
   $("#favState").textContent = { idle: "Favorite", playing: "Now playing", paused: "Paused" }[state];
@@ -419,7 +423,18 @@ function favSet(state) {
   if (state === "playing" && document.activeElement && document.activeElement.id === "favPlay") tg.focus();
   if (state === "idle" && document.activeElement && document.activeElement.id === "favStop") $("#favPlay").focus();
 }
+let favRaf = 0;
+function favArc() {
+  cancelAnimationFrame(favRaf);
+  const arc = $("#favArc"), fav = $("#fav"); if (!arc || !fav) return;
+  const a = SONG.audio, total = a && isFinite(a.duration) && a.duration > 0 ? a.duration : 30;
+  const p = a ? a.currentTime / total : (favSec % total) / total;
+  arc.style.strokeDashoffset = String(100 - Math.max(0, Math.min(1, p)) * 100);
+  const ring = $("#favRing"); if (ring) ring.setAttribute("aria-label", fav.dataset.state === "playing" ? "Pause" : "Play");
+  if (fav.dataset.state === "playing") favRaf = requestAnimationFrame(favArc);
+}
 function favReset() {
+  cancelAnimationFrame(favRaf);
   clearInterval(favTimer); favTimer = null; favSec = 0;
   if (SONG.audio) { SONG.audio.pause(); SONG.audio.currentTime = 0; }
 }
@@ -478,15 +493,6 @@ function songLookup() {
     return songAudio(hit, false);
   });
   return SONG.ask;
-}
-// While the clip plays, the small line under the song credits Apple Music
-function favCredit(state) {
-  const el = $("#favLast"); if (!el) return;
-  if (SONG.audio && state !== "idle") {
-    el.innerHTML = `30-second preview from ${SONG.store ? `<a href="${esc(SONG.store)}" target="_blank" rel="noopener">Apple Music</a>` : "Apple Music"}`;
-  } else {
-    el.textContent = `Last listened: ${plain(SITE.song.title)} · ${SITE.song.artist}`;
-  }
 }
 
 /* ---------- Clocks ---------- */
@@ -554,6 +560,7 @@ document.addEventListener("click", e => {
     copyText(addr).then(ok => toast(ok ? `Email copied: ${addr}` : addr));
   }
   if (e.target.closest("#favPlay")) { favSet("playing"); return; }
+  if (e.target.closest("#favRing")) { favSet($("#fav").dataset.state === "playing" ? "paused" : "playing"); return; }
   if (e.target.closest("#favToggle")) { favSet($("#fav").dataset.state === "playing" ? "paused" : "playing"); return; }
   if (e.target.closest("#favStop")) { favSet("idle"); return; }
   const zoom = e.target.closest("[data-zoom]");
