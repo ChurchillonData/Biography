@@ -2,6 +2,8 @@
 
 Personal site: research, experience, projects and awards.
 
+**Live site: https://churchillondata.github.io/Biography/**
+
 AI researcher and data scientist working on recommender systems, learning to rank and trustworthy AI.
 
 ## Structure
@@ -24,17 +26,17 @@ A value that starts with `?` is a placeholder and shows with a dotted underline 
 
 ## Run it locally
 
-Open `index.html` in a browser, or serve the folder:
+Only for previewing a copy downloaded to your own computer. It shows that copy, not what is on GitHub, so run `git pull` first to get the latest changes. Open `index.html` in a browser, or serve the folder:
 
 ```
 python3 -m http.server 8000
 ```
 
-then visit http://localhost:8000.
+then visit `localhost:8000` on the same computer.
 
 ## Publish with GitHub Pages
 
-Settings → Pages → Deploy from a branch → `main`, folder `/ (root)`. The site goes live at `https://<username>.github.io/<repository>/`.
+Settings → Pages → Deploy from a branch → `main`, folder `/ (root)` → Save. The site goes live at https://churchillondata.github.io/Biography/ and updates a minute or two after each push.
 
 ## Credits
 
