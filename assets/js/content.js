@@ -160,14 +160,15 @@ const PROJECTS = [
       "Training the ranker on retrieved candidates instead of observed pairs raised isolated HR@10 from 0.17 to 0.52. 84% of its decisions came from item popularity."
     ],
     links: { site: PAPER_DOI, siteLabel: "Paper", repo: "https://github.com/ChurchillonData/trace-r2d" } },
-  { slug: "climateclaim", title: "ClimateClaim", date: "?MM.YYYY", featured: false, mock: "green", image: ASSETS.shot_claimify,
+  { slug: "climateclaim", title: "ClimateClaim", date: "05.2026", featured: false, mock: "green", image: ASSETS.shot_claimify,
     short: "Greenwashing detection for ten oil and gas majors with ClimateBERT, SBERT reranking and GPT-4o-mini scoring.",
     tech: [["python","Python"],["huggingface","ClimateBERT"],["huggingface","SBERT"],["openai","GPT-4o-mini"]],
     overview: [
       "ClimateClaim checks what ten oil and gas majors say about climate against the evidence. ClimateBERT detects climate claims in company text. An SBERT cross-encoder reranks the supporting passages. GPT-4o-mini then scores each claim.",
+      "Evidence comes from NGO sources including Carbon Tracker, InfluenceMap, ClientEarth, Global Witness and The Guardian. Each claim is rated well substantiated, weakly substantiated or contradicted, with a plain-language rationale grounded in that evidence.",
       "The project is complete and shipped."
     ],
-    links: { site: "https://claimify-esg.vercel.app/", siteLabel: "Live site", repo: null } }
+    links: { site: "https://claimify-esg.vercel.app/", siteLabel: "Live site", repo: "https://github.com/ChurchillonData/claimify-esg" } }
 ];
 
 const AWARDS = [

@@ -126,7 +126,7 @@ function vHero() {
       ${link("mailto:" + s.email, ui("mail") + "Email me", "btn btn-light")}
     </div>
     <p class="bio">${esc(s.bio)}</p>
-    <div class="socials">${s.socials.map(x => link(x.href, ui(x.icon), "", x.label)).join("")}</div>
+    <div class="socials">${s.socials.filter(x => x.href).map(x => link(x.href, ui(x.icon), "", x.label)).join("")}</div>
     <div class="fav" id="fav" data-state="idle">
       <div class="tt" aria-hidden="true">
         <div class="plate"><div class="disc"></div><div class="spindle"></div></div>
@@ -210,7 +210,7 @@ function vCard(p) {
     <a class="media" href="#project-${p.slug}" aria-label="${esc(p.title)} details">${shot(p)}</a>
     <div class="pbody">
       <div class="ptop"><h3 class="ptitle"><a href="#project-${p.slug}">${esc(p.title)}</a></h3>
-        <div class="plinks">${link(p.links.site, ui("world"), "", p.links.siteLabel)}${link(p.links.repo, ui("brand-github"), "", "GitHub repository")}</div></div>
+        <div class="plinks">${p.links.site ? link(p.links.site, ui("world"), "", p.links.siteLabel) : ""}${p.links.repo ? link(p.links.repo, ui("brand-github"), "", "GitHub repository") : ""}</div></div>
       <p class="pdesc">${esc(p.short)}</p>
       <p class="ptech">Technologies</p>
       <div class="prow">
@@ -269,12 +269,12 @@ function vProject(p) {
     <div class="d-date">${tx(p.date)}</div>
     <h1 class="d-title">${esc(p.title)}</h1>
     <p class="d-desc">${esc(p.short)}</p>
-    <div class="d-btns">${link(L.site, ui("world") + "Visit site", "btn-out", L.siteLabel)}${link(L.repo, ui("brand-github") + "GitHub", "btn-out", "GitHub repository")}</div>
+    ${L.site || L.repo ? `<div class="d-btns">${L.site ? link(L.site, ui("world") + "Visit site", "btn-out", L.siteLabel) : ""}${L.repo ? link(L.repo, ui("brand-github") + "GitHub", "btn-out", "GitHub repository") : ""}</div>` : ""}
     <div class="chips">${names.map(n => `<span class="chip">${esc(n)}</span>`).join("")}</div>
     <div class="d-media"><div class="media">${shot(p)}</div></div>
     <h2 class="d-h">Overview</h2>${p.overview.map(t => `<p class="d-p">${esc(t)}</p>`).join("")}
     <h2 class="d-h">Tech Stack</h2><ul class="d-list">${names.map(n => `<li>${esc(n)}</li>`).join("")}</ul>
-    <h2 class="d-h">Links</h2><ul class="d-list">${linkRow(L.site, L.siteLabel)}${linkRow(L.repo, "Repository")}</ul>`;
+    ${L.site || L.repo ? `<h2 class="d-h">Links</h2><ul class="d-list">${L.site ? linkRow(L.site, L.siteLabel) : ""}${L.repo ? linkRow(L.repo, "Repository") : ""}</ul>` : ""}`;
 }
 
 /* ---------- GitHub calendar: real contributions for the last year ---------- */
