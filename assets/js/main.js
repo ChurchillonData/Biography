@@ -110,13 +110,13 @@ const MOCKS = {
         <aside class="mx-side">
           <div class="mx-lab">COMPANY OR TICKER</div>
           <div class="mx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Search by name or ticker</div>
-          <div class="mx-co"><span class="mx-mono">MS</span><div><b>Microsoft Corporation</b><small>MSFT | NASDAQ</small><small><span class="mx-flag"></span><b style="display:inline;font-size:inherit">US</b></small><small class="s">Cloud &amp; Software</small></div></div>
+          <div class="mx-co"><img class="mx-cl" src="${ASSETS.msft}" alt=""><div><b>Microsoft Corporation</b><small>MSFT | NASDAQ</small><small><span class="mx-flag"></span><b style="display:inline;font-size:inherit">US</b></small><small class="s">Cloud &amp; Software</small></div></div>
           <div class="mx-lab mt">FILING TYPE</div>
           <div class="mx-seg"><span class="on"><b>8-K</b><small>Current</small></span><span><b>10-Q</b><small>Quarterly</small></span><span><b>10-K</b><small>Annual</small></span></div>
           <div class="mx-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Analyze latest filing</div>
         </aside>
         <section class="mx-main">
-          <div class="mx-head"><span class="mx-mono lg">MS</span><div>
+          <div class="mx-head"><img class="mx-cl lg" src="${ASSETS.msft}" alt=""><div>
             <div class="mx-h1">MICROSOFT CORP <em>MSFT</em></div>
             <div class="mx-filed">Filed: 14 May 2026 <span class="mx-flag"></span>US <i>|</i> <span class="lnk">SEC Filing</span></div>
           </div></div>

@@ -18,7 +18,8 @@ const ASSETS = {
   "gwg": "assets/img/logos/grow-with-google.png",
   "mmc": "assets/img/logos/mentor-me-collective.png",
   "hdruk": "assets/img/logos/hdruk.png",
-  "research": "assets/img/logos/retrieval-or-ranking.svg"
+  "research": "assets/img/logos/retrieval-or-ranking.svg",
+  "msft": "assets/img/projects/microsoft-logo.png"
 };
 
 const SITE = {

@@ -167,10 +167,10 @@ main{padding-block:16px 8px; min-height:60vh}
 .pcard{border:1px solid var(--line); border-radius:20px; background:var(--card); overflow:hidden}
 .media{position:relative; aspect-ratio:16/10; max-width:100%; background:url("../img/pattern.svg") center/cover no-repeat; container-type:inline-size; display:grid; place-items:center}
 .shot{width:85%; height:84%; border-radius:2.6cqw; overflow:hidden; box-shadow:0 2cqw 6cqw rgba(10,20,45,.30); position:relative}
-.shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top center}
+.shot > img{display:block; width:100%; height:100%; object-fit:cover; object-position:top center}
 /* real screenshots keep their own shape: the frame shrinks to the image, so nothing is cropped */
 .shot.is-img{width:auto; height:auto; background:var(--card)}
-.shot.is-img img{width:auto; height:auto; max-width:85cqw; max-height:53cqw; object-fit:contain}
+.shot.is-img > img{width:auto; height:auto; max-width:85cqw; max-height:53cqw; object-fit:contain}
 .pbody{padding:22px 20px}
 .ptop{display:flex; justify-content:space-between; align-items:center; gap:12px}
 .ptitle{margin:0; font-size:22px; font-weight:700; letter-spacing:-.025em; line-height:1.2; min-width:0}
@@ -439,6 +439,8 @@ main{padding-block:16px 8px; min-height:60vh}
 .mx-btn svg{width:1.125cqw; height:1.125cqw}
 .mx-main{flex:1; min-width:0; background:#fff; border:1px solid #e3e8ef; border-radius:0.5cqw; padding:1.125cqw 1cqw}
 .mx-head{display:flex; align-items:center; gap:1.125cqw; padding:0.25cqw 0.875cqw 0.125cqw}
+.mx-cl{flex:none; display:block; width:3cqw; height:3cqw; object-fit:contain}
+.mx-cl.lg{width:3.25cqw; height:3.25cqw}
 .mx-mono.lg{width:3.25cqw; height:3.25cqw; font-size:1.1875cqw}
 .mx-h1{display:flex; align-items:center; gap:0.75cqw; font-size:1.625cqw; font-weight:800; letter-spacing:-0.0187cqw}
 .mx-h1 em{font-style:normal; font-size:0.7812cqw; font-weight:800; color:#334155; background:#eef1f5; border-radius:0.4375cqw; padding:0.25cqw 0.5625cqw; letter-spacing:0.0187cqw}
@@ -624,7 +626,7 @@ main{padding-block:16px 8px; min-height:60vh}
 @media (min-width:1024px){
   .wrap{max-width:900px; padding-left:max(32px, env(safe-area-inset-left,0px)); padding-right:max(32px, env(safe-area-inset-right,0px))}
   .media{aspect-ratio:16/9}
-  .shot.is-img img{max-height:48cqw}
+  .shot.is-img > img{max-height:48cqw}
 }
 
 @media (max-width:420px){ .name{font-size:28px} .clocks{font-size:12.5px} }
