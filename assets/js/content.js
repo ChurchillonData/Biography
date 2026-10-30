@@ -20,7 +20,7 @@ const ASSETS = {
   "hdruk": "assets/img/logos/hdruk.png",
   "research": "assets/img/logos/retrieval-or-ranking.svg",
   "shot_edgar": "assets/img/projects/edgar-risk.jpg",
-  "shot_claimify": "assets/img/projects/greenlens.jpg"
+  "shot_claimify": "assets/img/projects/climateclaim.jpg"
 };
 
 const SITE = {
@@ -160,11 +160,11 @@ const PROJECTS = [
       "Training the ranker on retrieved candidates instead of observed pairs raised isolated HR@10 from 0.17 to 0.52. 84% of its decisions came from item popularity."
     ],
     links: { site: PAPER_DOI, siteLabel: "Paper", repo: "https://github.com/ChurchillonData/trace-r2d" } },
-  { slug: "greenlens", title: "GreenLens", date: "?MM.YYYY", featured: false, mock: "green", image: ASSETS.shot_claimify,
+  { slug: "climateclaim", title: "ClimateClaim", date: "?MM.YYYY", featured: false, mock: "green", image: ASSETS.shot_claimify,
     short: "Greenwashing detection for ten oil and gas majors with ClimateBERT, SBERT reranking and GPT-4o-mini scoring.",
     tech: [["python","Python"],["huggingface","ClimateBERT"],["huggingface","SBERT"],["openai","GPT-4o-mini"]],
     overview: [
-      "GreenLens checks what ten oil and gas majors say about climate against the evidence. ClimateBERT detects climate claims in company text. An SBERT cross-encoder reranks the supporting passages. GPT-4o-mini then scores each claim.",
+      "ClimateClaim checks what ten oil and gas majors say about climate against the evidence. ClimateBERT detects climate claims in company text. An SBERT cross-encoder reranks the supporting passages. GPT-4o-mini then scores each claim.",
       "The project is complete and shipped."
     ],
     links: { site: null, siteLabel: "Live site", repo: null } }

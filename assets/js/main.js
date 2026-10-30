@@ -53,7 +53,7 @@ const BANNER = `<svg viewBox="0 0 1200 380" preserveAspectRatio="xMidYMid slice"
 /* ---------- Mock screenshots (replace with real screenshots) ---------- */
 const MOCKS = {
   green: () => `<div class="m m-green">
-      <div class="m-nav"><b>GreenLens</b><span><span>Companies</span><span>Claims</span><span>Method</span><span class="m-cta">Open app</span></span></div>
+      <div class="m-nav"><b>ClimateClaim</b><span><span>Companies</span><span>Claims</span><span>Method</span><span class="m-cta">Open app</span></span></div>
       <div class="m-tag">Climate claim verification</div>
       <div class="m-h">Climate talk is cheap.<em>Check the evidence.</em></div>
       <div class="m-sub">Claims from ten oil and gas majors, matched to evidence and scored one by one.</div>
