@@ -266,10 +266,12 @@ function vAward(a) {
     ${ph}
   </article>`;
 }
+// Each project's own background pattern (falls back to the shared one)
+const mediaBg = p => p.bg && ASSETS[p.bg] ? ` style="background-image:url('${ASSETS[p.bg]}')"` : "";
 function vCard(p) {
   const uniq = [...new Map(p.tech.map(t => [t[0], t])).values()];
   return `<article class="pcard">
-    <a class="media" href="#project-${p.slug}" aria-label="${esc(p.title)} details">${shot(p)}</a>
+    <a class="media"${mediaBg(p)} href="#project-${p.slug}" aria-label="${esc(p.title)} details">${shot(p)}</a>
     <div class="pbody">
       <div class="ptop"><h3 class="ptitle"><a href="#project-${p.slug}">${esc(p.title)}</a></h3>
         <div class="plinks">${p.links.site ? link(p.links.site, ui("world"), "", p.links.siteLabel) : ""}${p.links.repo ? link(p.links.repo, ui("brand-github"), "", "GitHub repository") : ""}</div></div>
@@ -334,8 +336,8 @@ function vProject(p) {
     ${L.site || L.repo ? `<div class="d-btns">${L.site ? link(L.site, ui("world") + "Visit site", "btn-out", L.siteLabel) : ""}${L.repo ? link(L.repo, ui("brand-github") + "GitHub", "btn-out", "GitHub repository") : ""}</div>` : ""}
     <div class="chips">${names.map(n => `<span class="chip">${esc(n)}</span>`).join("")}</div>
     ${p.image
-      ? `<div class="d-media zoomable" data-zoom role="button" tabindex="0" aria-label="View the image full size"><div class="media">${shot(p)}</div></div><p class="d-hint">Tap the image to view it full size</p>`
-      : `<div class="d-media"><div class="media">${shot(p)}</div></div>`}
+      ? `<div class="d-media zoomable" data-zoom role="button" tabindex="0" aria-label="View the image full size"><div class="media"${mediaBg(p)}>${shot(p)}</div></div><p class="d-hint">Tap the image to view it full size</p>`
+      : `<div class="d-media"><div class="media"${mediaBg(p)}>${shot(p)}</div></div>`}
     <h2 class="d-h">Overview</h2>${p.overview.map(t => `<p class="d-p">${esc(t)}</p>`).join("")}
     <h2 class="d-h">Tech Stack</h2><ul class="d-list">${names.map(n => `<li>${esc(n)}</li>`).join("")}</ul>
     ${L.site || L.repo ? `<h2 class="d-h">Links</h2><ul class="d-list">${L.site ? linkRow(L.site, L.siteLabel) : ""}${L.repo ? linkRow(L.repo, "Repository") : ""}</ul>` : ""}`;

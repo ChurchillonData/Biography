@@ -26,8 +26,11 @@ const ASSETS = {
   "smw1": "assets/img/photos/smart-manufacturing-week-badge.jpg",
   "smw1_size": [1200, 895],
   "smw2": "assets/img/photos/smart-manufacturing-week.jpg",
-  "smw2_size": [1051, 533
-  ]
+  "smw2_size": [1051, 533],
+  "pat_rr": "assets/img/patterns/retrieval-or-ranking.svg",
+  "pat_vellum": "assets/img/patterns/vellum-nlq.svg",
+  "pat_edgar": "assets/img/patterns/edgar-risk.svg",
+  "pat_climate": "assets/img/patterns/climateclaim.svg"
 };
 
 const SITE = {
@@ -143,7 +146,7 @@ const PUBLICATIONS = [
 ];
 
 const PROJECTS = [
-  { slug: "retrieval-or-ranking", title: "Retrieval or Ranking?", date: "07.2026", featured: true, mock: "paper", image: ASSETS.arch,
+  { slug: "retrieval-or-ranking", title: "Retrieval or Ranking?", date: "07.2026", featured: true, mock: "paper", image: ASSETS.arch, bg: "pat_rr",
     short: "Diagnosing the dominant bottleneck in a hybrid two-stage recommender on a sparse product catalogue.",
     tech: [["t:binary-tree-2","LightGBM LambdaRank"],["huggingface","SBERT"],["t:math-function","SVD"],["t:arrows-sort","Learning to Rank"]],
     overview: [
@@ -152,7 +155,7 @@ const PROJECTS = [
       "Training the ranker on retrieved candidates instead of observed pairs raised isolated HR@10 from 0.17 to 0.52. 84% of its decisions came from item popularity."
     ],
     links: { site: PAPER_DOI, siteLabel: "Paper", repo: "https://github.com/ChurchillonData/trace-r2d" } },
-  { slug: "vellum-nlq", title: "Vellum-NLQ", date: "05.2026", featured: true, mock: "vellum",
+  { slug: "vellum-nlq", title: "Vellum-NLQ", date: "05.2026", featured: true, mock: "vellum", bg: "pat_vellum",
     short: "A governed natural-language query layer that lets non-technical users ask questions of medical insurance claims data in plain English.",
     tech: [["python","Python"],["postgresql","SQL"],["t:brain","LLMs"],["t:database","Text-to-SQL"]],
     overview: [
@@ -161,7 +164,7 @@ const PROJECTS = [
       "Every answer comes back with the SQL that produced it, so a reviewer can audit what the model actually ran."
     ],
     links: { site: null, siteLabel: "Live site", repo: "https://github.com/ChurchillonData/vellum-nlq" } },
-  { slug: "edgar-risk", title: "EDGAR Risk", date: "04.2026", featured: true, mock: "edgar",
+  { slug: "edgar-risk", title: "EDGAR Risk", date: "04.2026", featured: true, mock: "edgar", bg: "pat_edgar",
     short: "Explainable risk and sentiment analysis of SEC filings, with every score traced back to matched terms and cited excerpts.",
     tech: [["python","Python"],["t:file-search","NLP"],["t:list-details","Finance lexicons"],["t:building-bank","SEC EDGAR"]],
     overview: [
@@ -170,7 +173,7 @@ const PROJECTS = [
       "It parses filing sections and supports both US issuer forms (8-K, 10-Q, 10-K) and foreign issuer forms (6-K, 20-F)."
     ],
     links: { site: "https://edgar-risklens.netlify.app/", siteLabel: "Live site", repo: "https://github.com/ChurchillonData/SEC-Risk-Analyzer" } },
-  { slug: "climateclaim", title: "ClimateClaim", date: "05.2026", featured: false, mock: "green",
+  { slug: "climateclaim", title: "ClimateClaim", date: "05.2026", featured: false, mock: "green", bg: "pat_climate",
     short: "Greenwashing detection for ten oil and gas majors with ClimateBERT, SBERT reranking and GPT-4o-mini scoring.",
     tech: [["python","Python"],["huggingface","ClimateBERT"],["huggingface","SBERT"],["openai","GPT-4o-mini"]],
     overview: [
