@@ -161,7 +161,6 @@ const MOCKS = {
 const shot = p => p.image ? `<div class="shot is-img"><img src="${p.image}" alt="${esc(p.title)} screenshot" loading="lazy" decoding="async"></div>` : `<div class="shot">${MOCKS[p.mock]()}</div>`;
 
 /* ---------- Music player bits ---------- */
-const STOP_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2" fill="currentColor"/></svg>`;
 const WAVE = Array.from({ length: 40 }, (_, i) => {
   const h = [38, 62, 46, 88, 54, 30, 72, 100, 44, 66, 34, 80][(i * 7) % 12];
   const dur = (0.7 + ((i * 13) % 9) / 10).toFixed(2);
@@ -199,13 +198,12 @@ function vHero() {
       </div>
       <div class="fav-last" id="favLast">Last listened: ${esc(plain(s.song.title))} · ${esc(s.song.artist)}</div>
       <button class="play" id="favPlay" type="button" aria-label="Play ${esc(plain(s.song.title))}">${ui("play-filled")}</button>
-      <button class="fav-ring" id="favRing" type="button" aria-label="Pause">
+      <button class="fav-ring" id="favRing" type="button" aria-label="Stop" title="Stop">
         <svg viewBox="0 0 44 44" aria-hidden="true"><circle class="rg-track" cx="22" cy="22" r="20.5"/><circle class="rg-fill" id="favArc" cx="22" cy="22" r="20.5" pathLength="100"/></svg>
-        <span class="rg-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="rg-stop" aria-hidden="true"></span>
       </button>
       <div class="fav-bar" id="favBar" hidden>
         <button class="fb-btn" id="favToggle" type="button" aria-label="Pause">${ui("pause-filled")}</button>
-        <button class="fb-btn" id="favStop" type="button" aria-label="Stop">${STOP_ICON}</button>
         <div class="fb-wave" aria-hidden="true">${WAVE}</div>
         <span class="fb-time" id="favTime" aria-live="off">0s</span>
       </div>
@@ -421,7 +419,7 @@ function favSet(state) {
   tg.innerHTML = state === "playing" ? ui("pause-filled") : ui("play-filled");
   tg.setAttribute("aria-label", state === "playing" ? "Pause" : "Play");
   if (state === "playing" && document.activeElement && document.activeElement.id === "favPlay") tg.focus();
-  if (state === "idle" && document.activeElement && document.activeElement.id === "favStop") $("#favPlay").focus();
+  if (state === "idle" && document.activeElement && document.activeElement.id === "favRing") $("#favPlay").focus();
 }
 let favRaf = 0;
 function favArc() {
@@ -430,7 +428,6 @@ function favArc() {
   const a = SONG.audio, total = a && isFinite(a.duration) && a.duration > 0 ? a.duration : 30;
   const p = a ? a.currentTime / total : (favSec % total) / total;
   arc.style.strokeDashoffset = String(100 - Math.max(0, Math.min(1, p)) * 100);
-  const ring = $("#favRing"); if (ring) ring.setAttribute("aria-label", fav.dataset.state === "playing" ? "Pause" : "Play");
   if (fav.dataset.state === "playing") favRaf = requestAnimationFrame(favArc);
 }
 function favReset() {
@@ -560,9 +557,8 @@ document.addEventListener("click", e => {
     copyText(addr).then(ok => toast(ok ? `Email copied: ${addr}` : addr));
   }
   if (e.target.closest("#favPlay")) { favSet("playing"); return; }
-  if (e.target.closest("#favRing")) { favSet($("#fav").dataset.state === "playing" ? "paused" : "playing"); return; }
+  if (e.target.closest("#favRing")) { favSet("idle"); return; }
   if (e.target.closest("#favToggle")) { favSet($("#fav").dataset.state === "playing" ? "paused" : "playing"); return; }
-  if (e.target.closest("#favStop")) { favSet("idle"); return; }
   const zoom = e.target.closest("[data-zoom]");
   if (zoom) { const im = zoom.querySelector("img"); $("#lbImg").src = im.src; $("#lbImg").alt = im.alt; $("#lb").hidden = false; root.style.overflow = "hidden"; return; }
   if (e.target.closest("#lb")) { $("#lb").hidden = true; root.style.overflow = ""; return; }
