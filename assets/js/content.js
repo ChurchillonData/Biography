@@ -31,15 +31,15 @@ const SITE = {
   myCity: "London",
   myPlace: "London, United Kingdom",
   myCoords: "51.51° N, 0.13° W",
-  bookCall: null,
+  bookCall: "https://cal.com/boakyemma",
   avatar: ASSETS.avatar,
   socials: [
-    { icon: "brand-x", label: "X", href: null },
+    { icon: "brand-x", label: "X", href: "https://x.com/churchillondata" },
     { icon: "brand-linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/emmanuel-boakye-gh/" },
     { icon: "brand-github", label: "GitHub", href: "https://github.com/ChurchillonData" },
     { icon: "brand-medium", label: "Medium", href: null },
     { icon: "mail", label: "Email", href: "mailto:boakyemmanuel1@outlook.com" },
-    { icon: "file-text", label: "Resume", href: null }
+    { icon: "file-text", label: "Resume", href: "https://drive.google.com/file/d/1AjgyI-1A7TCr4E3eBvwSgFHnkkBS5kgo/view" }
   ],
   song: { title: "?Kwaku the Traveller", artist: "Black Sherif",
           url: "https://open.spotify.com/search/Kwaku%20the%20Traveller%20Black%20Sherif" },
