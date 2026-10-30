@@ -331,7 +331,9 @@ function vProject(p) {
     <p class="d-desc">${esc(p.short)}</p>
     ${L.site || L.repo ? `<div class="d-btns">${L.site ? link(L.site, ui("world") + "Visit site", "btn-out", L.siteLabel) : ""}${L.repo ? link(L.repo, ui("brand-github") + "GitHub", "btn-out", "GitHub repository") : ""}</div>` : ""}
     <div class="chips">${names.map(n => `<span class="chip">${esc(n)}</span>`).join("")}</div>
-    <div class="d-media"><div class="media">${shot(p)}</div></div>
+    ${p.image
+      ? `<div class="d-media zoomable" data-zoom role="button" tabindex="0" aria-label="View the image full size"><div class="media">${shot(p)}</div></div><p class="d-hint">Tap the image to view it full size</p>`
+      : `<div class="d-media"><div class="media">${shot(p)}</div></div>`}
     <h2 class="d-h">Overview</h2>${p.overview.map(t => `<p class="d-p">${esc(t)}</p>`).join("")}
     <h2 class="d-h">Tech Stack</h2><ul class="d-list">${names.map(n => `<li>${esc(n)}</li>`).join("")}</ul>
     ${L.site || L.repo ? `<h2 class="d-h">Links</h2><ul class="d-list">${L.site ? linkRow(L.site, L.siteLabel) : ""}${L.repo ? linkRow(L.repo, "Repository") : ""}</ul>` : ""}`;
@@ -511,6 +513,7 @@ sx.addEventListener("click", e => { if (e.target === sx) closeSearch(); });
 sxInput.addEventListener("input", drawSearch);
 sxInput.addEventListener("keydown", e => { if (e.key === "Enter") { const a = sxList.querySelector(".sx-item"); if (a) { a.click(); } } });
 document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target && e.target.matches && e.target.matches("[data-zoom]")) { e.target.click(); return; }
   if (e.key === "Escape" && !$("#lb").hidden) { $("#lb").hidden = true; root.style.overflow = ""; }
   else if (e.key === "Escape" && !sx.hidden) closeSearch();
   else if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && sx.hidden && !/input|textarea/i.test(document.activeElement.tagName))) { e.preventDefault(); openSearch(); }

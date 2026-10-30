@@ -229,6 +229,8 @@ main{padding-block:16px 8px; min-height:60vh}
 .btn-out:hover{background:var(--chip)}
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
 .chip{display:inline-flex; align-items:center; height:26px; padding:0 11px; border-radius:999px; background:var(--chip); border:1px solid var(--line); font-family:var(--mono); font-size:12.5px}
+.d-media.zoomable{cursor:zoom-in}
+.d-hint{margin:10px 0 0; text-align:center; font-size:13px; color:var(--muted)}
 .d-media{margin-top:28px; border:1px solid var(--line); border-radius:20px; overflow:hidden}
 .d-h{margin:46px 0 0; font-size:26px; font-weight:700; letter-spacing:-.035em; line-height:1.15}
 .d-p{margin:16px 0 0; font-size:17px; line-height:1.6; color:var(--muted); max-width:64ch}
@@ -394,7 +396,7 @@ main{padding-block:16px 8px; min-height:60vh}
 .aw-img:hover img{opacity:.92}
 .lb{position:fixed; inset:0; z-index:80; background:rgba(5,7,5,.88); display:flex; align-items:center; justify-content:center; cursor:zoom-out;
   padding:max(48px, calc(env(safe-area-inset-top,0px) + 40px)) max(16px, env(safe-area-inset-right,0px)) max(24px, env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px))}
-.lb img{max-width:100%; max-height:100%; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lb img{max-width:100%; max-height:100%; border-radius:12px; background:#fff; box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .lb-x{position:absolute; top:calc(env(safe-area-inset-top,0px) + 10px); right:max(12px, env(safe-area-inset-right,0px)); width:38px; height:38px; border-radius:50%;
   border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08); color:#fff; font-size:22px; line-height:1; cursor:pointer}
 .aw-photo figcaption{padding:10px 14px; font-size:13px; color:var(--muted); border-top:1px solid var(--line)}

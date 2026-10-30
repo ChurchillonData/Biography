@@ -19,7 +19,10 @@ const ASSETS = {
   "mmc": "assets/img/logos/mentor-me-collective.png",
   "hdruk": "assets/img/logos/hdruk.png",
   "research": "assets/img/logos/retrieval-or-ranking.svg",
-  "msft": "assets/img/projects/microsoft-logo.png"
+  "msft": "assets/img/projects/microsoft-logo.png",
+  "arch": "assets/img/projects/retrieval-or-ranking-architecture.png",
+  "arch_size": [2545, 1515
+  ]
 };
 
 const SITE = {
@@ -132,6 +135,15 @@ const PUBLICATIONS = [
 ];
 
 const PROJECTS = [
+  { slug: "retrieval-or-ranking", title: "Retrieval or Ranking?", date: "07.2026", featured: true, mock: "paper", image: ASSETS.arch,
+    short: "Diagnosing the dominant bottleneck in a hybrid two-stage recommender on a sparse product catalogue.",
+    tech: [["t:binary-tree-2","LightGBM LambdaRank"],["huggingface","SBERT"],["t:math-function","SVD"],["t:arrows-sort","Learning to Rank"]],
+    overview: [
+      "Follow-up research to my MSc dissertation. I rebuilt the recommender as two stages on Amazon Electronics 2023, separating candidate retrieval from ranking across 79,838 users and 48,154 items. Candidates were generated out-of-fold so no evaluation information could reach training.",
+      "A simple popularity baseline (HR@10 = 0.61) beat the full hybrid system (HR@10 = 0.30). I reported that as a finding.",
+      "Training the ranker on retrieved candidates instead of observed pairs raised isolated HR@10 from 0.17 to 0.52. 84% of its decisions came from item popularity."
+    ],
+    links: { site: PAPER_DOI, siteLabel: "Paper", repo: "https://github.com/ChurchillonData/trace-r2d" } },
   { slug: "vellum-nlq", title: "Vellum-NLQ", date: "05.2026", featured: true, mock: "vellum",
     short: "A governed natural-language query layer that lets non-technical users ask questions of medical insurance claims data in plain English.",
     tech: [["python","Python"],["postgresql","SQL"],["t:brain","LLMs"],["t:database","Text-to-SQL"]],
@@ -150,15 +162,6 @@ const PROJECTS = [
       "It parses filing sections and supports both US issuer forms (8-K, 10-Q, 10-K) and foreign issuer forms (6-K, 20-F)."
     ],
     links: { site: "https://edgar-risklens.netlify.app/", siteLabel: "Live site", repo: "https://github.com/ChurchillonData/SEC-Risk-Analyzer" } },
-  { slug: "retrieval-or-ranking", title: "Retrieval or Ranking?", date: "07.2026", featured: false, mock: "paper",
-    short: "Diagnosing the dominant bottleneck in a hybrid two-stage recommender on a sparse product catalogue.",
-    tech: [["t:binary-tree-2","LightGBM LambdaRank"],["huggingface","SBERT"],["t:math-function","SVD"],["t:arrows-sort","Learning to Rank"]],
-    overview: [
-      "Follow-up research to my MSc dissertation. I rebuilt the recommender as two stages on Amazon Electronics 2023, separating candidate retrieval from ranking across 79,838 users and 48,154 items. Candidates were generated out-of-fold so no evaluation information could reach training.",
-      "A simple popularity baseline (HR@10 = 0.61) beat the full hybrid system (HR@10 = 0.30). I reported that as a finding.",
-      "Training the ranker on retrieved candidates instead of observed pairs raised isolated HR@10 from 0.17 to 0.52. 84% of its decisions came from item popularity."
-    ],
-    links: { site: PAPER_DOI, siteLabel: "Paper", repo: "https://github.com/ChurchillonData/trace-r2d" } },
   { slug: "climateclaim", title: "ClimateClaim", date: "05.2026", featured: false, mock: "green",
     short: "Greenwashing detection for ten oil and gas majors with ClimateBERT, SBERT reranking and GPT-4o-mini scoring.",
     tech: [["python","Python"],["huggingface","ClimateBERT"],["huggingface","SBERT"],["openai","GPT-4o-mini"]],
