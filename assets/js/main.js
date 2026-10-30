@@ -52,13 +52,46 @@ const BANNER = `<svg viewBox="0 0 1200 380" preserveAspectRatio="xMidYMid slice"
 
 /* ---------- Mock screenshots (replace with real screenshots) ---------- */
 const MOCKS = {
-  green: () => `<div class="m m-green">
-      <div class="m-nav"><b>ClimateClaim</b><span><span>Companies</span><span>Claims</span><span>Method</span><span class="m-cta">Open app</span></span></div>
-      <div class="m-tag">Climate claim verification</div>
-      <div class="m-h">Climate talk is cheap.<em>Check the evidence.</em></div>
-      <div class="m-sub">Claims from ten oil and gas majors, matched to evidence and scored one by one.</div>
-      <div class="m-btns"><span>Explore claims</span><span>How it works</span></div>
-      <div class="m-stats"><div><b>10</b><small>Oil and gas majors</small></div><div><b>ClimateBERT</b><small>Claim detection</small></div><div><b>SBERT</b><small>Evidence reranking</small></div><div><b>GPT-4o-mini</b><small>Claim scoring</small></div></div>
+  green: () => `<div class="m mc">
+      <div class="mc-top">
+        <div class="mc-brand"><span class="mc-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14z"/><path d="M5 19l7-7"/></svg></span><b>ClimateClaim</b><em>ESG</em></div>
+        <div class="mc-how"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>How are sources weighted?</div>
+      </div>
+      <div class="mc-body">
+        <aside class="mc-side">
+          <div class="mc-tabs"><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>Claims</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></svg>Compare</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Tracker</span></div>
+          <div class="mc-co"><small>Company</small><div class="mc-sel"><span class="mc-mono">BP</span>BP<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          <div class="mc-claim"><h6><i></i>Biodiversity <span class="mc-pill">Well substantiated</span></h6><p>“We achieved all three targets for 2025, with all new in-scope projects…</p><small>GreenSignal: <b>0.10</b></small></div><div class="mc-claim"><h6><i></i>Emissions Reduction <span class="mc-pill">Well substantiated</span></h6><p>“We made significant progress, reducing freshwater withdrawal by 15% and…</p><small>GreenSignal: <b>0.17</b></small></div><div class="mc-claim"><h6><i></i>Emissions Reduction <span class="mc-pill">Well substantiated</span></h6><p>“In India we are working with an NGO in Silvassa to build infrastructure to…</p><small>GreenSignal: <b>0.30</b></small></div><div class="mc-claim"><h6><i></i>Other <span class="mc-pill">Well substantiated</span></h6><p>“In 2025 the number of reported oil spills increased to 110 compared with…</p><small>GreenSignal: <b>0.26</b></small></div><div class="mc-claim w on"><h6><i></i>Net Zero <span class="mc-pill w">Weakly substantiated</span></h6><p>“Our 2025 engagement with selected NOJV partners focused on the topics o…</p><small>GreenSignal: <b>0.65</b></small></div><div class="mc-claim w"><h6><i></i>Net Zero <span class="mc-pill w">Weakly substantiated</span></h6><p>“Our 2025 analysis used a suite of external scenarios from various…</p></div><div class="mc-count">20 claims</div>
+        </aside>
+        <section class="mc-main">
+          <div class="mc-head"><span class="mc-mono">BP</span><div><b>BP</b><small>NET ZERO</small></div><span class="mc-year"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16"/></svg>Report year: <b>2025</b></span></div>
+          <div class="mc-wrap">
+            <div class="mc-row">
+              <div>
+                <p class="mc-quote">“Our 2025 engagement with selected NOJV partners focused on the topics of net zero operations, biodiversity and human rights.”</p>
+                <div class="mc-src">Source: <b>BP Sustainability Report 2025, p.11</b></div>
+                <div class="mc-grid">
+                  <div class="mc-crit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg><div><b>Target</b><small>Not stated</small></div><span class="x">✕</span></div>
+                  <div class="mc-crit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><div><b>Deadline</b><small>2025</small></div><span class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+                  <div class="mc-crit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg><div><b>Scope</b><small>Not stated</small></div><span class="x">✕</span></div>
+                  <div class="mc-crit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg><div><b>Measurable</b><small>Not stated</small></div><span class="x">✕</span></div>
+                </div>
+              </div>
+              <div class="mc-score"><small>GREENSIGNAL</small><div class="n">0.65</div><div class="l">Moderate greenwashing signal</div>
+                <div class="mc-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+                <div class="mc-scale"><span>Low</span><span>Moderate</span><span>High</span></div>
+                <span class="mc-pill w">Weakly substantiated</span></div>
+            </div>
+            <div class="mc-hr"></div>
+            <div class="mc-h">RATIONALE</div>
+            <p class="mc-txt">The claim is classified as weakly substantiated because it mentions a specific engagement timeline of 2025 but lacks detailed quantitative commitments or specific metrics related to net zero operations, biodiversity, and human rights. The absence of concrete figures or defined goals weakens the overall credibility of the claim.</p>
+            <div class="mc-chips"><span>specific engagement year: 2025</span><span>no quantified commitments</span><span>no specific metrics provided</span></div>
+            <div class="mc-hr"></div>
+            <div class="mc-h">DECISION TRACE<span>system reasoning, each step grounded in evidence</span></div>
+            <div class="mc-step"><i>1</i><div><p><b>Engagement Year Present</b>: The claim states, ‘Our 2025 engagement with selected NOJV partners…’.</p><small>The presence of a specific year indicates a timeline for engagement.</small></div><span class="mc-tag s">supports</span></div><div class="mc-step"><i>2</i><div><p><b>Lack of Quantified Commitments</b>: The claim does not provide any specific numbers or quantified commitments regarding net zero operations, biodiversity, or human rights.</p><small>Absence of specific metrics or commitments weakens the substantiation of the claim.</small></div><span class="mc-tag">neutral</span></div><div class="mc-step"><i>3</i><div><p><b>No Defined Goals</b>: The claim mentions topics of focus but does not define any specific goals or metrics related to those topics.</p><small>The lack of defined goals contributes to the weak substantiation of the claim.</small></div><span class="mc-tag">neutral</span></div>
+          </div>
+        </section>
+      </div>
     </div>`,
   paper: () => `<div class="m m-paper">
       <div class="mp-top"><span>PREPRINT · ZENODO</span><span>2026</span></div>
@@ -68,16 +101,43 @@ const MOCKS = {
       <div class="mp-flow"><span>Catalogue</span><i>→</i><span>Retrieval</span><i>→</i><span>Ranking</span><i>→</i><span class="k">Top-K</span></div>
       <div class="mp-abs">ABSTRACT</div><div class="mp-lines"><i></i><i></i><i></i><i></i><i style="width:72%"></i></div>
     </div>`,
-  edgar: () => `<div class="m m-edgar">
-      <div class="me-bar"><b>EDGAR Risk</b><span>Form 10-K · Example Corp</span></div>
-      <div class="me-body">
-        <div class="me-card"><div class="me-h">Risk by category</div>
-          ${[["Litigation",72,"r"],["Regulatory",58,"a"],["Market",46,"a"],["Cybersecurity",40,"b"],["Liquidity",31,"b"],["Operational",27,"b"]].map(([n,w,c]) => `<div class="me-row"><span>${n}</span><i class="${c}" style="width:${w}%"></i></div>`).join("")}
-        </div>
-        <div class="me-col">
-          <div class="me-card"><div class="me-h">Risk across filings <em>Rising</em></div><div class="me-trend"><i style="height:38%"></i><i style="height:46%"></i><i style="height:58%"></i><i style="height:74%"></i></div></div>
-          <div class="me-card me-quote">“…pending <mark>litigation</mark> and <mark>regulatory</mark> review could <mark>adversely</mark> affect results…”</div>
-        </div>
+  edgar: () => `<div class="m mx">
+      <div class="mx-top">
+        <div class="mx-brand"><span class="mx-logo"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="3.5" y="4" width="17" height="19" rx="3" fill="#fff"/><path d="M6.5 15l3-4 3 2.4 4-5.4" fill="none" stroke="#e5484d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="19" r="4.6" fill="#2f6fe4" stroke="#0f1b33" stroke-width="1.6"/><circle cx="19" cy="19" r="2.2" fill="#9cc3ff"/><path d="M22.3 22.3l3 3" stroke="#2f6fe4" stroke-width="2.4" stroke-linecap="round"/></svg></span><b>EDGAR Risk</b><span class="t">Explainable SEC filing risk intelligence</span></div>
+        <div class="mx-topr"><span class="mx-live"><i></i>Live</span><span class="mx-gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>GitHub</span></div>
+      </div>
+      <div class="mx-body">
+        <aside class="mx-side">
+          <div class="mx-lab">COMPANY OR TICKER</div>
+          <div class="mx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Search by name or ticker</div>
+          <div class="mx-co"><span class="mx-mono">MS</span><div><b>Microsoft Corporation</b><small>MSFT | NASDAQ</small><small><span class="mx-flag"></span><b style="display:inline;font-size:inherit">US</b></small><small class="s">Cloud &amp; Software</small></div></div>
+          <div class="mx-lab mt">FILING TYPE</div>
+          <div class="mx-seg"><span class="on"><b>8-K</b><small>Current</small></span><span><b>10-Q</b><small>Quarterly</small></span><span><b>10-K</b><small>Annual</small></span></div>
+          <div class="mx-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Analyze latest filing</div>
+        </aside>
+        <section class="mx-main">
+          <div class="mx-head"><span class="mx-mono lg">MS</span><div>
+            <div class="mx-h1">MICROSOFT CORP <em>MSFT</em></div>
+            <div class="mx-filed">Filed: 14 May 2026 <span class="mx-flag"></span>US <i>|</i> <span class="lnk">SEC Filing</span></div>
+          </div></div>
+          <div class="mx-kpis">
+            <div class="mx-kpi"><span class="mx-ic g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1.8 2 5.2 2 7 0"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.6"/></svg></span><div><small>Sentiment</small><p><b class="g">Positive</b>+1.00 score</p></div></div>
+            <div class="mx-kpi"><span class="mx-ic g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span><div><small>Risk Level</small><p><b class="g">Low</b>0.00 per 1k words</p></div></div>
+            <div class="mx-kpi"><span class="mx-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8 1c0 1.7-2.4 2.2-2.4 3.7"/><path d="M12 17h.01" stroke-width="2.6"/></svg></span><div><small>Uncertainty</small><p><b class="p">11.74</b>per 1k words</p></div></div>
+          </div>
+          <div class="mx-sum"><h6><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.3l2.4 2.4 4.6-4.9"/></svg>Executive Summary</h6>
+            <p><b>MICROSOFT CORP</b>’s <b>8-K</b> filing from <b>2026-05-14</b> is scored as <b>positive</b> with <b>low risk</b>.</p>
+            <p>The sentiment score is 1.0. The strongest matched terms are: may, <b>growth</b>, <b>subject to</b>.</p>
+            <p>The risk score is 0.0 and the uncertainty score is 11.7417. Review the cited excerpts for the source language.</p></div>
+          <div class="mx-trend">
+            <div class="mx-th"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>RISK TREND</b><small>6 recent filings</small></div>
+            <div class="mx-chart"><svg viewBox="0 0 640 210" aria-hidden="true"><g stroke="#eceff3" stroke-width="1"><line x1="44" y1="36" x2="628" y2="36"/><line x1="44" y1="76" x2="628" y2="76"/><line x1="44" y1="116" x2="628" y2="116"/></g><line x1="44" y1="20" x2="44" y2="160" stroke="#cfd6df" stroke-width="1.4"/><polyline points="44,160 155,160 266,160 377,160 488,160 599,160" fill="none" stroke="#2f6fe4" stroke-width="3.2" stroke-linecap="round"/><circle cx="44" cy="160" r="4.6" fill="#22c55e" stroke="#fff" stroke-width="1.6"/><circle cx="155" cy="160" r="4.6" fill="#22c55e" stroke="#fff" stroke-width="1.6"/><circle cx="266" cy="160" r="4.6" fill="#22c55e" stroke="#fff" stroke-width="1.6"/><circle cx="377" cy="160" r="4.6" fill="#22c55e" stroke="#fff" stroke-width="1.6"/><circle cx="488" cy="160" r="4.6" fill="#22c55e" stroke="#fff" stroke-width="1.6"/><circle cx="599" cy="160" r="6" fill="#22c55e" stroke="#fff" stroke-width="1.6"/><text x="44" y="181" font-size="12.5" text-anchor="middle">8-K</text><text x="44" y="199" font-size="12.5" text-anchor="middle">May 26</text><text x="155" y="181" font-size="12.5" text-anchor="middle">8-K</text><text x="155" y="199" font-size="12.5" text-anchor="middle">Jun 26</text><text x="266" y="181" font-size="12.5" text-anchor="middle">8-K</text><text x="266" y="199" font-size="12.5" text-anchor="middle">Jul 26</text><text x="377" y="181" font-size="12.5" text-anchor="middle">8-K</text><text x="377" y="199" font-size="12.5" text-anchor="middle">Sept 26</text><text x="488" y="181" font-size="12.5" text-anchor="middle">8-K</text><text x="488" y="199" font-size="12.5" text-anchor="middle">Oct 26</text><text x="599" y="181" font-size="12.5" text-anchor="middle">8-K</text><text x="599" y="199" font-size="12.5" text-anchor="middle">Oct 26</text></svg></div>
+            <div class="mx-sel"><small>SELECTED FILING</small><b class="t">8-K · 28 Oct 2026</b>
+              <div><span>Risk score</span><span>0.00</span></div><div><span>Risk level</span><span class="g">Low</span></div>
+              <div><span>Uncertainty</span><span>2.16</span></div><div><span>Top driver</span><span>No dominant driver</span></div></div>
+          </div>
+          <div class="mx-exc">CITED EXCERPTS<small>5 found</small></div>
+        </section>
       </div>
     </div>`,
   vellum: () => `<div class="m m-vellum">

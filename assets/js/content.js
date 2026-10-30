@@ -18,9 +18,7 @@ const ASSETS = {
   "gwg": "assets/img/logos/grow-with-google.png",
   "mmc": "assets/img/logos/mentor-me-collective.png",
   "hdruk": "assets/img/logos/hdruk.png",
-  "research": "assets/img/logos/retrieval-or-ranking.svg",
-  "shot_edgar": "assets/img/projects/edgar-risk.jpg",
-  "shot_claimify": "assets/img/projects/climateclaim.jpg"
+  "research": "assets/img/logos/retrieval-or-ranking.svg"
 };
 
 const SITE = {
@@ -142,7 +140,7 @@ const PROJECTS = [
       "Every answer comes back with the SQL that produced it, so a reviewer can audit what the model actually ran."
     ],
     links: { site: null, siteLabel: "Live site", repo: "https://github.com/ChurchillonData/vellum-nlq" } },
-  { slug: "edgar-risk", title: "EDGAR Risk", date: "04.2026", featured: true, mock: "edgar", image: ASSETS.shot_edgar,
+  { slug: "edgar-risk", title: "EDGAR Risk", date: "04.2026", featured: true, mock: "edgar",
     short: "Explainable risk and sentiment analysis of SEC filings, with every score traced back to matched terms and cited excerpts.",
     tech: [["python","Python"],["t:file-search","NLP"],["t:list-details","Finance lexicons"],["t:building-bank","SEC EDGAR"]],
     overview: [
@@ -160,7 +158,7 @@ const PROJECTS = [
       "Training the ranker on retrieved candidates instead of observed pairs raised isolated HR@10 from 0.17 to 0.52. 84% of its decisions came from item popularity."
     ],
     links: { site: PAPER_DOI, siteLabel: "Paper", repo: "https://github.com/ChurchillonData/trace-r2d" } },
-  { slug: "climateclaim", title: "ClimateClaim", date: "05.2026", featured: false, mock: "green", image: ASSETS.shot_claimify,
+  { slug: "climateclaim", title: "ClimateClaim", date: "05.2026", featured: false, mock: "green",
     short: "Greenwashing detection for ten oil and gas majors with ClimateBERT, SBERT reranking and GPT-4o-mini scoring.",
     tech: [["python","Python"],["huggingface","ClimateBERT"],["huggingface","SBERT"],["openai","GPT-4o-mini"]],
     overview: [
