@@ -430,12 +430,15 @@ const SONG = { audio: null, store: "", ask: null };
 function songLookup() {
   if (SONG.ask) return SONG.ask;
   const low = v => String(v || "").toLowerCase();
-  const pick = data => ((data && data.results) || []).find(r => r.previewUrl
-    && low(r.trackName).includes(low(SITE.song.title)) && low(r.artistName).includes(low(SITE.song.artist))) || null;
-  const query = extra => "https://itunes.apple.com/search?" + new URLSearchParams({
-    term: SITE.song.artist + " " + SITE.song.title, media: "music", entity: "song", limit: "25", ...extra });
+  const pick = data => ((data && data.results) || []).find(r => r.previewUrl && (r.trackId === SITE.song.appleId
+    || (low(r.trackName).includes(low(SITE.song.title)) && low(r.artistName).includes(low(SITE.song.artist))))) || null;
+  // Ask for the exact track by its Apple ID first, then fall back to a search
+  const urls = [
+    "https://itunes.apple.com/lookup?" + new URLSearchParams({ id: SITE.song.appleId, entity: "song" }),
+    "https://itunes.apple.com/search?" + new URLSearchParams({ term: SITE.song.artist + " " + SITE.song.title, media: "music", entity: "song", limit: "25" })
+  ];
   // Way 1: JSONP, the method Apple documents for calling the search API from a web page
-  const viaScript = () => new Promise(resolve => {
+  const viaScript = url => new Promise(resolve => {
     const cb = "ebSong" + Date.now();
     const tag = document.createElement("script");
     let t;
@@ -443,12 +446,13 @@ function songLookup() {
     t = setTimeout(() => done(null), 7000);
     window[cb] = data => done(pick(data));
     tag.onerror = () => done(null);
-    tag.src = query({ callback: cb });
+    tag.src = url + "&callback=" + cb;
     document.head.appendChild(tag);
   });
   // Way 2: a plain request, in case the browser refuses the first
-  const viaFetch = () => fetch(query({}), { mode: "cors" }).then(r => r.ok ? r.json() : null).then(pick).catch(() => null);
-  SONG.ask = viaScript().then(hit => hit || viaFetch()).then(hit => {
+  const viaFetch = url => fetch(url, { mode: "cors" }).then(r => r.ok ? r.json() : null).then(pick).catch(() => null);
+  const tries = [() => viaScript(urls[0]), () => viaFetch(urls[0]), () => viaScript(urls[1]), () => viaFetch(urls[1])];
+  SONG.ask = tries.reduce((chain, next) => chain.then(hit => hit || next()), Promise.resolve(null)).then(hit => {
     if (!hit) { SONG.ask = null; return null; }   // let a later press try again
     const a = new Audio();
     a.preload = "auto";
@@ -590,7 +594,7 @@ paintThemeBtn();
 render();
 loadGitHub();
 // Look up the song's preview clip once the page has settled, so the first press plays straight away
-(window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => songLookup());
+setTimeout(() => songLookup(), 800);
 
 /* ---------- Footer: the GitHub plate drops in on a crooked thread that slowly straightens, and can be swung ---------- */
 (function hangingPlate() {

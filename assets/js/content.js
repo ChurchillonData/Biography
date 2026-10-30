@@ -51,7 +51,7 @@ const SITE = {
     { icon: "file-text", label: "Resume", href: "https://drive.google.com/file/d/1AjgyI-1A7TCr4E3eBvwSgFHnkkBS5kgo/view" }
   ],
   song: { title: "Top of the Morning", artist: "Black Sherif",
-          url: "https://open.spotify.com/track/7C2ld7CGhCilI6w07NG3jZ" },
+          url: "https://open.spotify.com/track/7C2ld7CGhCilI6w07NG3jZ", appleId: 1789008594 },
   stack: [
     ["python","Python"],["r","R"],["pytorch","PyTorch"],["scikitlearn","scikit-learn"],["pandas","Pandas"],["numpy","NumPy"],
     ["huggingface","Hugging Face"],["langchain","LangChain"],["openai","OpenAI"],["claude","Claude"],["jupyter","Jupyter"],["matplotlib","Matplotlib"],
