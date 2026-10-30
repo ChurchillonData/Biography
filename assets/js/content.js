@@ -150,7 +150,7 @@ const PROJECTS = [
       "Overall risk breaks down into litigation, regulatory, liquidity, market, cybersecurity and operational categories. The system tracks risk across a company's recent filings to show whether it is rising or falling.",
       "It parses filing sections and supports both US issuer forms (8-K, 10-Q, 10-K) and foreign issuer forms (6-K, 20-F)."
     ],
-    links: { site: null, siteLabel: "Live site", repo: "https://github.com/ChurchillonData/SEC-Risk-Analyzer" } },
+    links: { site: "https://edgar-risklens.netlify.app/", siteLabel: "Live site", repo: "https://github.com/ChurchillonData/SEC-Risk-Analyzer" } },
   { slug: "retrieval-or-ranking", title: "Retrieval or Ranking?", date: "07.2026", featured: false, mock: "paper",
     short: "Diagnosing the dominant bottleneck in a hybrid two-stage recommender on a sparse product catalogue.",
     tech: [["t:binary-tree-2","LightGBM LambdaRank"],["huggingface","SBERT"],["t:math-function","SVD"],["t:arrows-sort","Learning to Rank"]],
@@ -167,7 +167,7 @@ const PROJECTS = [
       "ClimateClaim checks what ten oil and gas majors say about climate against the evidence. ClimateBERT detects climate claims in company text. An SBERT cross-encoder reranks the supporting passages. GPT-4o-mini then scores each claim.",
       "The project is complete and shipped."
     ],
-    links: { site: null, siteLabel: "Live site", repo: null } }
+    links: { site: "https://claimify-esg.vercel.app/", siteLabel: "Live site", repo: null } }
 ];
 
 const AWARDS = [
