@@ -22,7 +22,12 @@ const ASSETS = {
   "msft": "assets/img/projects/microsoft-logo.png",
   "arch": "assets/img/projects/retrieval-or-ranking-architecture.png",
   "arch_size": [2545, 1515],
-  "bp": "assets/img/projects/bp-logo.png"
+  "bp": "assets/img/projects/bp-logo.png",
+  "smw1": "assets/img/photos/smart-manufacturing-week-badge.jpg",
+  "smw1_size": [1200, 895],
+  "smw2": "assets/img/photos/smart-manufacturing-week.jpg",
+  "smw2_size": [1051, 533
+  ]
 };
 
 const SITE = {
@@ -185,6 +190,13 @@ const AWARDS = [
     desc: "EDI inclusivity challenge using AI.", logo: { img: "aied" },
     photos: [{ src: "hackathon", alt: "Hackathon participants standing beside an AI avatar display at Loughborough University" }],
     caption: "AI in Education Hackathon, Loughborough University, 2025" },
+  { title: "Student Representative @ Smart Manufacturing Week UK", issuer: "Loughborough University CompSci", year: "2025", logo: { img: "loughborough" },
+    desc: "Represented Loughborough University Computer Science at Smart Manufacturing Week, NEC Birmingham, 4–5 June 2025.",
+    photos: [
+      { src: "smw1", alt: "Smart Manufacturing Week badge for Emmanuel Boakye, Data Science Graduate Student, Loughborough University, with the event lanyard" },
+      { src: "smw2", alt: "Smart Manufacturing Week attendee card for Emmanuel Boakye, Loughborough University, 4 to 5 June 2025 at NEC Birmingham" }
+    ],
+    caption: "Smart Manufacturing Week, NEC Birmingham, June 2025" },
   { title: "Government of Ghana Scholarship", issuer: "Ghana Scholarships Secretariat", year: "2024",
     desc: "Sponsored my MSc in Data Science at Loughborough University.", logo: { img: "ghana", border: true } }
 ];
