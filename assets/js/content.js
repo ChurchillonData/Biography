@@ -164,7 +164,7 @@ const PROJECTS = [
       "Every answer comes back with the SQL that produced it, so a reviewer can audit what the model actually ran."
     ],
     links: { site: null, siteLabel: "Live site", repo: "https://github.com/ChurchillonData/vellum-nlq" } },
-  { slug: "climateclaim", title: "ClimateClaim", date: "05.2026", featured: false, mock: "green", bg: "pat_climate",
+  { slug: "climateclaim", title: "ClimateClaim", date: "05.2026", featured: true, mock: "green", bg: "pat_climate",
     short: "Greenwashing detection for ten oil and gas majors with ClimateBERT, SBERT reranking and GPT-4o-mini scoring.",
     tech: [["python","Python"],["huggingface","ClimateBERT"],["huggingface","SBERT"],["openai","GPT-4o-mini"]],
     overview: [
@@ -173,7 +173,7 @@ const PROJECTS = [
       "The project is complete and shipped."
     ],
     links: { site: "https://claimify-esg.vercel.app/", siteLabel: "Live site", repo: "https://github.com/ChurchillonData/claimify-esg" } },
-  { slug: "edgar-risk", title: "EDGAR Risk", date: "04.2026", featured: true, mock: "edgar", bg: "pat_edgar",
+  { slug: "edgar-risk", title: "EDGAR Risk", date: "04.2026", featured: false, mock: "edgar", bg: "pat_edgar",
     short: "Explainable risk and sentiment analysis of SEC filings, with every score traced back to matched terms and cited excerpts.",
     tech: [["python","Python"],["t:file-search","NLP"],["t:list-details","Finance lexicons"],["t:building-bank","SEC EDGAR"]],
     overview: [
