@@ -366,10 +366,10 @@ main{padding-block:16px 8px; min-height:60vh}
 .ab-title{margin:0; font-size:clamp(32px, 7.6vw, 46px); line-height:1.08; font-weight:800; letter-spacing:-.045em; max-width:17ch; text-wrap:balance}
 .ab-lead{margin:22px 0 0; font-size:18px; line-height:1.68; color:var(--muted)}
 .ab-quote{margin:30px 0 0; padding:2px 0 2px 20px; border-left:2px solid var(--line); font-style:italic; font-size:16.5px; line-height:1.72; color:var(--muted)}
-.ab-traits{display:flex; align-items:center; gap:6px; margin-top:32px}
-.ab-pills{flex:0 1 auto; min-width:0; display:flex; flex-wrap:wrap; gap:6px}
+.ab-traits{display:flex; align-items:center; gap:5px; margin-top:32px}
+.ab-pills{flex:0 1 auto; min-width:0; display:flex; flex-wrap:wrap; gap:5px}
 .ab-rule{flex:1 1 0; min-width:0; height:1px; background:var(--line)}
-.ab-pill{padding:5px 10.5px; border-radius:999px; font-size:14px; font-weight:500; color:var(--c);
+.ab-pill{padding:5px 10px; border-radius:999px; font-size:13.75px; font-weight:500; color:var(--c);
   background:color-mix(in srgb, var(--c) 8%, var(--bg)); border:1px solid color-mix(in srgb, var(--c) 30%, var(--bg))}
 .ab-facts{margin:30px 0 0; padding-top:24px; border-top:1px solid var(--line); display:grid; gap:20px}
 .ab-facts dt{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
