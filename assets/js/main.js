@@ -331,16 +331,18 @@ function vBooks() {
     <h1 class="bk-title">Books</h1>
     <p class="bk-intro">${esc(BOOKS.intro)}</p>
     <ul class="bk-grid">${BOOKS.list.map(b => `<li class="bk">
-      <img src="https://covers.openlibrary.org/b/id/${encodeURIComponent(b.cover)}-L.jpg" alt="${esc(b.title)} by ${esc(b.author)}" loading="lazy" decoding="async">
+      <img src="${b.img && ASSETS[b.img] ? esc(ASSETS[b.img]) : `https://covers.openlibrary.org/b/id/${encodeURIComponent(b.cover)}-L.jpg?default=false`}" alt="${esc(b.title)} by ${esc(b.author)}" decoding="async">
       <div class="bk-plain"><b>${esc(b.title)}</b><span>${esc(b.author)}</span></div></li>`).join("")}</ul>
-    <p class="bk-credit">Covers from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a></p>
+    ${BOOKS.list.some(b => !(b.img && ASSETS[b.img])) ? `<p class="bk-credit">Covers from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a></p>` : ""}
   </section>`;
 }
-// A cover that fails to load becomes a plain card with the title and author
+// A cover that fails to load, or comes back as a tiny placeholder, becomes a plain card with the title and author
 function bookFallbacks() {
   document.querySelectorAll(".bk img").forEach(img => {
     const off = () => img.closest(".bk").classList.add("no-cover");
-    if (img.complete && !img.naturalWidth) off(); else img.addEventListener("error", off, { once: true });
+    const check = () => { if (img.naturalWidth < 40) off(); };
+    if (img.complete) check(); else { img.addEventListener("load", check, { once: true }); img.addEventListener("error", off, { once: true }); }
+    setTimeout(() => { if (!img.naturalWidth) off(); }, 8000);   // still nothing after 8 seconds
   });
 }
 const rich = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");

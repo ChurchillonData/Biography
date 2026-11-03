@@ -208,7 +208,7 @@ const AWARDS = [
     desc: "Sponsored my MSc in Data Science at Loughborough University.", logo: { img: "ghana", border: true } }
 ];
 
-// Books page. Covers come from Open Library (openlibrary.org): swap a cover by changing its number.
+// Books page. A cover saved in assets/img/books (img) is used first, otherwise Open Library's (cover number).
 const BOOKS = {
   intro: "Books I've been reading. I haven't finished all of them yet, and some are still in progress. Each one has given me something to think about.",
   list: [
