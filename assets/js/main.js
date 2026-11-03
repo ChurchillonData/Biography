@@ -321,6 +321,10 @@ function vHome() {
 }
 const backHome = `<a class="back" href="#home">${ui("arrow-left")}Back home</a>`;
 const vAllExp = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">All</p><h2 class="h2">Experience</h2>${EXPERIENCE.map(vExp).join("")}</section>`;
+const CV_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>`;
+const vResume = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">Curriculum vitae</p>
+  <div class="cv-head"><h2 class="h2">Resume</h2><a class="btn btn-dark cv-dl" href="${esc(ASSETS.cv)}" download="Emmanuel-Boakye-CV.pdf">${CV_ICON}Download PDF</a></div>
+  <div class="cv-pages" id="cvPages" aria-busy="true"><div class="cv-page cv-wait" aria-label="Loading the CV"></div></div></section>`;
 const vAllRes = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">All</p><h2 class="h2">Research</h2>${RESEARCH.map(vRes).join("")}${vPubs()}</section>`;
 const vAllProj = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">All</p><h2 class="h2">Projects</h2><div class="plist">${PROJECTS.map(vCard).join("")}</div></section>`;
 function vProject(p) {
@@ -387,6 +391,7 @@ function render() {
   let p;
   if (h.startsWith("project-") && (p = PROJECTS.find(x => x.slug === h.slice(8)))) { app.innerHTML = vProject(p); document.title = p.title + " · Emmanuel Boakye"; }
   else if (h === "projects") { app.innerHTML = vAllProj(); document.title = "Projects · Emmanuel Boakye"; }
+  else if (h === "resume") { app.innerHTML = vResume(); document.title = "Resume · Emmanuel Boakye"; loadResume(); }
   else if (h === "research") { app.innerHTML = vAllRes(); document.title = "Research · Emmanuel Boakye"; }
   else if (h === "experience") { app.innerHTML = vAllExp(); document.title = "Experience · Emmanuel Boakye"; }
   else { app.innerHTML = vHome(); document.title = "Emmanuel Boakye"; }
@@ -576,6 +581,81 @@ document.addEventListener("click", e => {
     const h = sxItem.getAttribute("href");
     if (h.startsWith("#") && h === (location.hash || "#home")) { e.preventDefault(); jump(); }
   }
+});
+
+/* ---------- Resume: the CV PDF drawn right inside the page with PDF.js ---------- */
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+let pdfLib = null, cvDoc = null, cvWidth = 0, cvTimer = 0;
+function loadPdfJs() {
+  if (!pdfLib) pdfLib = new Promise((resolve, reject) => {
+    const t = document.createElement("script");
+    t.src = PDFJS + "pdf.min.js";
+    t.onload = () => { const lib = window.pdfjsLib; if (!lib) return reject(new Error("pdf.js")); lib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js"; resolve(lib); };
+    t.onerror = () => reject(new Error("pdf.js"));
+    document.head.appendChild(t);
+  }).catch(err => { pdfLib = null; throw err; });
+  return pdfLib;
+}
+async function loadResume() {
+  try {
+    const lib = await loadPdfJs();
+    if (!cvDoc) {
+      const src = ASSETS.cv;
+      const opts = src.startsWith("data:") ? { data: Uint8Array.from(atob(src.slice(src.indexOf(",") + 1)), c => c.charCodeAt(0)) } : { url: src };
+      cvDoc = await lib.getDocument(opts).promise;
+    }
+    await drawResume();
+  } catch (err) {
+    const box = $("#cvPages"); if (!box) return;
+    box.innerHTML = `<div class="cv-page cv-fail"><p>The CV couldn't be shown here right now.</p><a class="btn btn-dark cv-dl" href="${esc(ASSETS.cv)}" download="Emmanuel-Boakye-CV.pdf">${CV_ICON}Download PDF</a></div>`;
+    box.setAttribute("aria-busy", "false");
+  }
+}
+async function drawResume() {
+  const box = $("#cvPages"); if (!box || !cvDoc) return;
+  const w = box.clientWidth, dpr = Math.min(3, window.devicePixelRatio || 1);
+  cvWidth = w;
+  const sheets = [];
+  for (let n = 1; n <= cvDoc.numPages; n++) {
+    const page = await cvDoc.getPage(n);
+    const base = page.getViewport({ scale: 1 });
+    const vp = page.getViewport({ scale: (w / base.width) * dpr * 1.25 });   // a little extra so pinch-zoom stays sharp
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.floor(vp.width); canvas.height = Math.floor(vp.height);
+    canvas.setAttribute("aria-hidden", "true");
+    await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+    const sheet = document.createElement("div");
+    sheet.className = "cv-page";
+    sheet.style.aspectRatio = `${base.width} / ${base.height}`;
+    sheet.appendChild(canvas);
+    // The page's text for screen readers
+    const text = await page.getTextContent();
+    const said = document.createElement("div"); said.className = "vh";
+    said.textContent = text.items.map(t => t.str).join(" ");
+    sheet.appendChild(said);
+    // Links in the PDF stay clickable
+    (await page.getAnnotations()).filter(a => a.subtype === "Link" && (a.url || a.unsafeUrl)).forEach(a => {
+      const url = String(a.url || a.unsafeUrl).trim().replace(/^h+(ttps?:\/\/)/i, "h$1");   // repairs a typed "hhttps://"
+      if (!/^(https?:\/\/|mailto:)/i.test(url)) return;
+      const [x1, y1, x2, y2] = base.convertToViewportRectangle(a.rect);
+      const el = document.createElement("a");
+      el.className = "cv-link"; el.href = url;
+      if (!url.startsWith("mailto:")) { el.target = "_blank"; el.rel = "noopener"; }
+      el.setAttribute("aria-label", url.replace(/^mailto:/, ""));
+      Object.assign(el.style, {
+        left: Math.min(x1, x2) / base.width * 100 + "%", top: Math.min(y1, y2) / base.height * 100 + "%",
+        width: Math.abs(x2 - x1) / base.width * 100 + "%", height: Math.abs(y2 - y1) / base.height * 100 + "%" });
+      sheet.appendChild(el);
+    });
+    sheets.push(sheet);
+  }
+  const now = $("#cvPages"); if (!now) return;   // the visitor left the page meanwhile
+  now.replaceChildren(...sheets);
+  now.setAttribute("aria-busy", "false");
+}
+window.addEventListener("resize", () => {
+  clearTimeout(cvTimer);
+  cvTimer = setTimeout(() => { const box = $("#cvPages"); if (box && cvDoc && Math.abs(box.clientWidth - cvWidth) > 30) drawResume(); }, 200);
 });
 
 /* ---------- Search ---------- */

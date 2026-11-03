@@ -30,7 +30,8 @@ const ASSETS = {
   "pat_rr": "assets/img/patterns/retrieval-or-ranking.svg",
   "pat_vellum": "assets/img/patterns/vellum-nlq.svg",
   "pat_edgar": "assets/img/patterns/edgar-risk.svg",
-  "pat_climate": "assets/img/patterns/climateclaim.svg"
+  "pat_climate": "assets/img/patterns/climateclaim.svg",
+  "cv": "assets/docs/Emmanuel-Boakye-CV.pdf"
 };
 
 const SITE = {
@@ -51,7 +52,7 @@ const SITE = {
     { icon: "brand-github", label: "GitHub", href: "https://github.com/ChurchillonData" },
     { icon: "brand-medium", label: "Medium", href: null },
     { icon: "mail", label: "Email", href: "mailto:boakyemmanuel1@outlook.com" },
-    { icon: "file-text", label: "Resume", href: "https://drive.google.com/file/d/1AjgyI-1A7TCr4E3eBvwSgFHnkkBS5kgo/view" }
+    { icon: "file-text", label: "Resume", href: "#resume" }
   ],
   song: { title: "Top of the Morning", artist: "Black Sherif",
           url: "https://open.spotify.com/track/7C2ld7CGhCilI6w07NG3jZ", appleId: 1789008594,

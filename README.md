@@ -22,6 +22,8 @@ assets/
 
 Edit `assets/js/content.js`. Experience, research, publications, projects and awards are plain lists, and the site rebuilds itself from them. To change a picture, replace the file in `assets/img` with one of the same name, or point its entry in `ASSETS` at a new file.
 
+To update the CV, replace `assets/docs/Emmanuel-Boakye-CV.pdf` with the new PDF under the same name. The Resume page shows it inside the site and offers it as a download.
+
 A value that starts with `?` is a placeholder and shows with a dotted underline until it is replaced.
 
 ## Run it locally
