@@ -31,7 +31,20 @@ const ASSETS = {
   "pat_vellum": "assets/img/patterns/vellum-nlq.svg",
   "pat_edgar": "assets/img/patterns/edgar-risk.svg",
   "pat_climate": "assets/img/patterns/climateclaim.svg",
-  "cv": "assets/docs/Emmanuel-Boakye-CV.pdf"
+  "cv": "assets/docs/Emmanuel-Boakye-CV.pdf",
+  "book_alchemist": "assets/img/books/the-alchemist.jpg",
+  "book_alchemist_size": [626, 960],
+  "book_money": "assets/img/books/the-psychology-of-money.jpg",
+  "book_money_size": [621, 960],
+  "book_secret": "assets/img/books/the-secret.jpg",
+  "book_secret_size": [640, 807],
+  "book_deepwork": "assets/img/books/deep-work.jpg",
+  "book_deepwork_size": [611, 960],
+  "book_talk": "assets/img/books/think-faster-talk-smarter.jpg",
+  "book_talk_size": [634, 960],
+  "book_rich": "assets/img/books/think-and-grow-rich.jpg",
+  "book_rich_size": [640, 912
+  ]
 };
 
 const SITE = {
@@ -208,16 +221,16 @@ const AWARDS = [
     desc: "Sponsored my MSc in Data Science at Loughborough University.", logo: { img: "ghana", border: true } }
 ];
 
-// Books page. A cover saved in assets/img/books (img) is used first, otherwise Open Library's (cover number).
+// Books page. Each cover lives in assets/img/books. To add a book, add its cover there and a line here.
 const BOOKS = {
   intro: "Books I've been reading. I haven't finished all of them yet, and some are still in progress. Each one has given me something to think about.",
   list: [
-    { title: "The Alchemist", author: "Paulo Coelho", cover: 45762 },
-    { title: "The Psychology of Money", author: "Morgan Housel", cover: 14653525 },
-    { title: "The Secret", author: "Rhonda Byrne", cover: 845815 },
-    { title: "Deep Work", author: "Cal Newport", cover: 14859612 },
-    { title: "Think Faster, Talk Smarter", author: "Matt Abrahams", cover: 14590000 },
-    { title: "Think and Grow Rich", author: "Napoleon Hill", cover: 14830267 }
+    { title: "The Alchemist", author: "Paulo Coelho", img: "book_alchemist" },
+    { title: "The Psychology of Money", author: "Morgan Housel", img: "book_money" },
+    { title: "The Secret", author: "Rhonda Byrne", img: "book_secret" },
+    { title: "Deep Work", author: "Cal Newport", img: "book_deepwork" },
+    { title: "Think Faster, Talk Smarter", author: "Matt Abrahams", img: "book_talk" },
+    { title: "Think and Grow Rich", author: "Napoleon Hill", img: "book_rich" }
   ]
 };
 
