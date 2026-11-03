@@ -326,6 +326,23 @@ const CV_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 const vResume = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">Curriculum vitae</p>
   <div class="cv-head"><h2 class="h2">Resume</h2><a class="btn btn-dark cv-dl" href="${esc(ASSETS.cv)}" download="Emmanuel-Boakye-CV.pdf">${CV_ICON}Download PDF</a></div>
   <div class="cv-pages" id="cvPages" aria-busy="true"><div class="cv-page cv-wait" aria-label="Loading the CV"></div></div></section>`;
+function vBooks() {
+  return `${backHome}<section class="sec" style="margin-top:26px">
+    <h1 class="bk-title">Books</h1>
+    <p class="bk-intro">${esc(BOOKS.intro)}</p>
+    <ul class="bk-grid">${BOOKS.list.map(b => `<li class="bk">
+      <img src="https://covers.openlibrary.org/b/id/${encodeURIComponent(b.cover)}-L.jpg" alt="${esc(b.title)} by ${esc(b.author)}" loading="lazy" decoding="async">
+      <div class="bk-plain"><b>${esc(b.title)}</b><span>${esc(b.author)}</span></div></li>`).join("")}</ul>
+    <p class="bk-credit">Covers from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a></p>
+  </section>`;
+}
+// A cover that fails to load becomes a plain card with the title and author
+function bookFallbacks() {
+  document.querySelectorAll(".bk img").forEach(img => {
+    const off = () => img.closest(".bk").classList.add("no-cover");
+    if (img.complete && !img.naturalWidth) off(); else img.addEventListener("error", off, { once: true });
+  });
+}
 const rich = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 function vAbout() {
   const a = ABOUT, soc = l => SITE.socials.find(x => x.label === l) || {};
@@ -411,6 +428,7 @@ function render() {
   let p;
   if (h.startsWith("project-") && (p = PROJECTS.find(x => x.slug === h.slice(8)))) { app.innerHTML = vProject(p); document.title = p.title + " · Emmanuel Boakye"; }
   else if (h === "projects") { app.innerHTML = vAllProj(); document.title = "Projects · Emmanuel Boakye"; }
+  else if (h === "books") { app.innerHTML = vBooks(); document.title = "Books · Emmanuel Boakye"; bookFallbacks(); }
   else if (h === "about") { app.innerHTML = vAbout(); document.title = "About · Emmanuel Boakye"; }
   else if (h === "resume") { app.innerHTML = vResume(); document.title = "Resume · Emmanuel Boakye"; loadResume(); }
   else if (h === "research") { app.innerHTML = vAllRes(); document.title = "Research · Emmanuel Boakye"; }
@@ -692,6 +710,7 @@ function navItems() {
     { l: "Research", h: "#research", k: "papers publications preprint" },
     { l: "Resume", h: soc("Resume").href, k: "cv" },
     { l: "Achievements", h: "#achievements", k: "awards honours recognition scholarship" },
+    { l: "Books", h: "#books", k: "reading library " + BOOKS.list.map(b => b.title + " " + b.author).join(" ") },
     ...["X", "Medium", "GitHub", "LinkedIn", "Email"].map(l => ({ l, h: soc(l).href, k: l === "Email" ? SITE.email : "" })),
     { l: "Book a call", h: SITE.bookCall, k: "calendar meeting chat" }
   ].filter(i => i.h);

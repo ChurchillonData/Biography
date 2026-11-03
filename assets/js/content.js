@@ -208,6 +208,19 @@ const AWARDS = [
     desc: "Sponsored my MSc in Data Science at Loughborough University.", logo: { img: "ghana", border: true } }
 ];
 
+// Books page. Covers come from Open Library (openlibrary.org): swap a cover by changing its number.
+const BOOKS = {
+  intro: "Books I've been reading. I haven't finished all of them yet, and some are still in progress. Each one has given me something to think about.",
+  list: [
+    { title: "The Alchemist", author: "Paulo Coelho", cover: 45762 },
+    { title: "The Psychology of Money", author: "Morgan Housel", cover: 14653525 },
+    { title: "The Secret", author: "Rhonda Byrne", cover: 845815 },
+    { title: "Deep Work", author: "Cal Newport", cover: 14859612 },
+    { title: "Think Faster, Talk Smarter", author: "Matt Abrahams", cover: 14590000 },
+    { title: "Think and Grow Rich", author: "Napoleon Hill", cover: 14830267 }
+  ]
+};
+
 // About page. Wrap words in **double stars** to give them the accent colour.
 const ABOUT = {
   title: "From economics to research on how AI makes decisions.",
