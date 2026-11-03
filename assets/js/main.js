@@ -178,7 +178,7 @@ function vHero() {
       <div class="avatar">${avatar}</div>
       <div class="clocks"><div>YOUR <b data-clock="local">--:--:--</b></div><div>MY <b data-clock="mine">--:--:--</b></div><div class="clock-loc" id="clockLoc" title="${esc(s.myPlace)}"></div></div>
     </div>
-    <h1 class="name">${esc(s.name)} ${VERIFIED}</h1>
+    <h1 class="name" id="about">${esc(s.name)} ${VERIFIED}</h1>
     <p class="role">${esc(s.role)}</p>
     <div class="cta">
       ${link(s.bookCall, ui("calendar") + "Book a call", "btn btn-dark", "Booking")}
@@ -316,7 +316,7 @@ function vHome() {
        <div class="more"><a class="btn-more" href="#research">Show all research experience</a></div>${vPubs()}</section>`
     + `<section class="sec"><p class="eyebrow">Featured</p><h2 class="h2">Projects</h2><div class="plist">${fp.map(vCard).join("")}</div>
        <div class="more"><a class="btn-more" href="#projects">Show all projects</a></div></section>`
-    + `<section class="sec"><p class="eyebrow">Recognition</p><h2 class="h2">Awards &amp; Honours</h2><div class="awards">${AWARDS.map(vAward).join("")}</div></section>`
+    + `<section class="sec" id="achievements"><p class="eyebrow">Recognition</p><h2 class="h2">Awards &amp; Honours</h2><div class="awards">${AWARDS.map(vAward).join("")}</div></section>`
     + vGitHub() + vQuote();
 }
 const backHome = `<a class="back" href="#home">${ui("arrow-left")}Back home</a>`;
@@ -392,7 +392,13 @@ function render() {
   else { app.innerHTML = vHome(); document.title = "Emmanuel Boakye"; }
   tick();
 }
-window.addEventListener("hashchange", () => { render(); window.scrollTo(0, 0); });
+// #about and #achievements are spots on the home page; every other page opens at the top
+const SPOTS = { about: "#about", achievements: "#achievements" };
+function jump(onLoad) {
+  const el = (k => SPOTS[k] && document.querySelector(SPOTS[k]))(decodeURIComponent(location.hash.slice(1)));
+  if (el) el.scrollIntoView({ block: "start" }); else if (!onLoad) window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", () => { render(); jump(); });
 
 /* ---------- Music player: idle, playing, paused ---------- */
 let favSec = 0, favTimer = null;
@@ -565,37 +571,73 @@ document.addEventListener("click", e => {
   if (zoom) { const im = zoom.querySelector("img"); $("#lbImg").src = im.src; $("#lbImg").alt = im.alt; $("#lb").hidden = false; root.style.overflow = "hidden"; return; }
   if (e.target.closest("#lb")) { $("#lb").hidden = true; root.style.overflow = ""; return; }
   const sxItem = e.target.closest(".sx-item");
-  if (sxItem) closeSearch();
+  if (sxItem) {
+    closeSearch();
+    const h = sxItem.getAttribute("href");
+    if (h.startsWith("#") && h === (location.hash || "#home")) { e.preventDefault(); jump(); }
+  }
 });
 
 /* ---------- Search ---------- */
 const sx = $("#sx"), sxInput = $("#sxInput"), sxList = $("#sxList");
-const INDEX = [
-  ...[["Home", "#home"], ["Experience", "#experience"], ["Research", "#research"], ["Projects", "#projects"]].map(([l, h]) => ({ g: "Pages", l, h })),
-  ...RESEARCH.map(r => ({ g: "Research", l: r.title, s: r.dates, h: "#research", k: r.paper + " " + r.bullets.join(" ") })),
+// What the search shows the moment it opens: the site's pages, then its links
+function navItems() {
+  const soc = l => SITE.socials.find(x => x.label === l) || {};
+  return [
+    { l: "Home", h: "#home" },
+    { l: "About", h: "#about", k: "bio intro me profile" },
+    { l: "Projects", h: "#projects" },
+    { l: "Work", h: "#experience", k: "experience jobs internships career" },
+    { l: "Research", h: "#research", k: "papers publications preprint" },
+    { l: "Resume", h: soc("Resume").href, k: "cv" },
+    { l: "Achievements", h: "#achievements", k: "awards honours recognition scholarship" },
+    ...["X", "Medium", "GitHub", "LinkedIn", "Email"].map(l => ({ l, h: soc(l).href, k: l === "Email" ? SITE.email : "" })),
+    { l: "Book a call", h: SITE.bookCall, k: "calendar meeting chat" }
+  ].filter(i => i.h);
+}
+// What typing also finds: everything on the site
+const CONTENT = [
   ...PROJECTS.map(p => ({ g: "Projects", l: p.title, h: "#project-" + p.slug, k: p.short + " " + p.tech.map(t => t[1]).join(" ") })),
-  ...EXPERIENCE.map(e => ({ g: "Experience", l: e.company, s: plain(e.role), h: "#experience", k: e.bullets.join(" ") })),
-  ...AWARDS.map(a => ({ g: "Awards", l: a.title, s: a.year, h: "#home", k: a.issuer })),
-  ...SITE.socials.filter(s => s.href).map(s => ({ g: "Links", l: s.label, h: s.href, ext: true }))
+  ...RESEARCH.map(r => ({ g: "Research", l: r.title, s: r.dates, h: "#research", k: r.paper + " " + r.bullets.join(" ") })),
+  ...EXPERIENCE.map(e => ({ g: "Work", l: e.company, s: plain(e.role), h: "#experience", k: e.bullets.join(" ") })),
+  ...AWARDS.map(a => ({ g: "Achievements", l: a.title, s: a.year, h: "#achievements", k: a.issuer }))
 ];
+let sxActive = -1;
+function sxMark(i) {
+  const items = [...sxList.querySelectorAll(".sx-item")];
+  if (!items.length) { sxActive = -1; return; }
+  sxActive = Math.max(-1, Math.min(items.length - 1, i));
+  items.forEach((a, n) => a.classList.toggle("on", n === sxActive));
+  if (sxActive >= 0) items[sxActive].scrollIntoView({ block: "nearest" });
+}
 function drawSearch() {
   const q = sxInput.value.trim().toLowerCase();
-  const hits = INDEX.filter(i => !q || (i.l + " " + (i.s || "") + " " + (i.k || "")).toLowerCase().includes(q));
-  if (!hits.length) { sxList.innerHTML = `<div class="sx-empty">No matches for “${esc(sxInput.value)}”.</div>`; return; }
-  let out = "", g = "";
-  hits.forEach(i => {
-    if (i.g !== g) { g = i.g; out += `<div class="sx-group">${g}</div>`; }
-    const ext = i.ext && /^https?:/.test(i.h) ? ` target="_blank" rel="noopener"` : "";
-    out += `<a class="sx-item" href="${esc(i.h)}"${ext}><span>${esc(i.l)}</span>${i.s ? `<small>${esc(i.s)}</small>` : ""}</a>`;
-  });
-  sxList.innerHTML = out;
+  const has = i => (i.l + " " + (i.s || "") + " " + (i.k || "")).toLowerCase().includes(q);
+  const groups = [["Navigate", navItems().filter(i => !q || has(i))]];
+  if (q) ["Projects", "Research", "Work", "Achievements"].forEach(g => groups.push([g, CONTENT.filter(i => i.g === g && has(i))]));
+  const html = groups.filter(([, list]) => list.length).map(([g, list]) => `<div class="sx-group">${g}</div>` + list.map(i => {
+    const ext = /^https?:/.test(i.h) ? ` target="_blank" rel="noopener"` : "";
+    return `<a class="sx-item" href="${esc(i.h)}"${ext}><span>${esc(i.l)}</span>${i.s ? `<small>${esc(i.s)}</small>` : ""}</a>`;
+  }).join("")).join("");
+  sxList.innerHTML = html || `<div class="sx-empty">No matches for “${esc(sxInput.value)}”.</div>`;
+  sxList.scrollTop = 0;
+  sxMark(q ? 0 : -1);
 }
 function openSearch() { sx.hidden = false; sxInput.value = ""; drawSearch(); root.style.overflow = "hidden"; setTimeout(() => sxInput.focus(), 20); }
 function closeSearch() { sx.hidden = true; root.style.overflow = ""; }
 $("#dockSearch").addEventListener("click", openSearch);
 sx.addEventListener("click", e => { if (e.target === sx) closeSearch(); });
 sxInput.addEventListener("input", drawSearch);
-sxInput.addEventListener("keydown", e => { if (e.key === "Enter") { const a = sxList.querySelector(".sx-item"); if (a) { a.click(); } } });
+sxInput.addEventListener("keydown", e => {
+  if (e.key === "ArrowDown") { e.preventDefault(); sxMark(sxActive + 1); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); sxMark(sxActive - 1); }
+  else if (e.key === "Enter") { const a = sxList.querySelectorAll(".sx-item")[Math.max(0, sxActive)]; if (a) a.click(); }
+});
+sxList.addEventListener("pointermove", e => {
+  const a = e.target.closest(".sx-item"); if (!a || e.pointerType !== "mouse") return;
+  const i = [...sxList.querySelectorAll(".sx-item")].indexOf(a); if (i !== sxActive) sxMark(i);
+});
+$("#sxClose").addEventListener("click", closeSearch);
 document.addEventListener("keydown", e => {
   if (e.key === "Enter" && e.target && e.target.matches && e.target.matches("[data-zoom]")) { e.target.click(); return; }
   if (e.key === "Escape" && !$("#lb").hidden) { $("#lb").hidden = true; root.style.overflow = ""; }
@@ -612,6 +654,7 @@ $("#yr").textContent = new Date().getFullYear();
 paintThemeBtn();
 render();
 loadGitHub();
+jump(true);
 // Look up the song's preview clip once the page has settled, so the first press plays straight away
 songLookup();
 
