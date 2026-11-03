@@ -178,13 +178,14 @@ function vHero() {
       <div class="avatar">${avatar}</div>
       <div class="clocks"><div>YOUR <b data-clock="local">--:--:--</b></div><div>MY <b data-clock="mine">--:--:--</b></div><div class="clock-loc" id="clockLoc" title="${esc(s.myPlace)}"></div></div>
     </div>
-    <h1 class="name" id="about">${esc(s.name)} ${VERIFIED}</h1>
+    <h1 class="name">${esc(s.name)} ${VERIFIED}</h1>
     <p class="role">${esc(s.role)}</p>
     <div class="cta">
       ${link(s.bookCall, ui("calendar") + "Book a call", "btn btn-dark", "Booking")}
       ${link("mailto:" + s.email, ui("mail") + "Email me", "btn btn-light")}
     </div>
     <p class="bio">${esc(s.bio)}</p>
+    <a class="bio-more" href="#about">More about me ${ui("arrow-right")}</a>
     <div class="socials">${s.socials.filter(x => x.href).map(x => link(x.href, ui(x.icon), "", x.label)).join("")}</div>
     <div class="fav" id="fav" data-state="idle">
       <div class="tt" aria-hidden="true">
@@ -325,6 +326,25 @@ const CV_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 const vResume = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">Curriculum vitae</p>
   <div class="cv-head"><h2 class="h2">Resume</h2><a class="btn btn-dark cv-dl" href="${esc(ASSETS.cv)}" download="Emmanuel-Boakye-CV.pdf">${CV_ICON}Download PDF</a></div>
   <div class="cv-pages" id="cvPages" aria-busy="true"><div class="cv-page cv-wait" aria-label="Loading the CV"></div></div></section>`;
+const rich = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+function vAbout() {
+  const a = ABOUT, soc = l => SITE.socials.find(x => x.label === l) || {};
+  const links = [["Email", "mail"], ["X", "brand-x"], ["GitHub", "brand-github"], ["LinkedIn", "brand-linkedin"]]
+    .map(([l, icon]) => soc(l).href ? link(soc(l).href, ui(icon), "", l) : "").join("");
+  return `${backHome}<article class="ab">
+    <h1 class="ab-title">${esc(a.title)}</h1>
+    <p class="ab-lead">${rich(a.lead)}</p>
+    <blockquote class="ab-quote">${esc(a.quote)}</blockquote>
+    <div class="ab-traits"><div class="ab-pills">${a.traits.map((t, i) => `<span class="ab-pill" style="--c:var(--tr${i % 4 + 1})">${esc(t)}</span>`).join("")}</div><i class="ab-rule" aria-hidden="true"></i></div>
+    <dl class="ab-facts">${a.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+    <h2 class="ab-h">How it started</h2>${a.started.map(p => `<p class="ab-p">${rich(p)}</p>`).join("")}
+    <h2 class="ab-h">How I work</h2>
+    <div class="ab-cards">${a.work.map(([t, d]) => `<div class="ab-card"><h3>${esc(t)}</h3><p>${esc(d)}</p></div>`).join("")}</div>
+    <h2 class="ab-h">Where I'm heading</h2><p class="ab-p">${rich(a.heading)}</p>
+    <h2 class="ab-h">Beyond the research</h2>${a.beyond.map(p => `<p class="ab-p">${rich(p)}</p>`).join("")}
+    <section class="ab-connect"><h2>Let's connect</h2><p>${esc(a.connect)}</p><div class="ab-links">${links}</div></section>
+  </article>`;
+}
 const vAllRes = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">All</p><h2 class="h2">Research</h2>${RESEARCH.map(vRes).join("")}${vPubs()}</section>`;
 const vAllProj = () => `${backHome}<section class="sec" style="margin-top:26px"><p class="eyebrow">All</p><h2 class="h2">Projects</h2><div class="plist">${PROJECTS.map(vCard).join("")}</div></section>`;
 function vProject(p) {
@@ -391,14 +411,15 @@ function render() {
   let p;
   if (h.startsWith("project-") && (p = PROJECTS.find(x => x.slug === h.slice(8)))) { app.innerHTML = vProject(p); document.title = p.title + " · Emmanuel Boakye"; }
   else if (h === "projects") { app.innerHTML = vAllProj(); document.title = "Projects · Emmanuel Boakye"; }
+  else if (h === "about") { app.innerHTML = vAbout(); document.title = "About · Emmanuel Boakye"; }
   else if (h === "resume") { app.innerHTML = vResume(); document.title = "Resume · Emmanuel Boakye"; loadResume(); }
   else if (h === "research") { app.innerHTML = vAllRes(); document.title = "Research · Emmanuel Boakye"; }
   else if (h === "experience") { app.innerHTML = vAllExp(); document.title = "Experience · Emmanuel Boakye"; }
   else { app.innerHTML = vHome(); document.title = "Emmanuel Boakye"; }
   tick();
 }
-// #about and #achievements are spots on the home page; every other page opens at the top
-const SPOTS = { about: "#about", achievements: "#achievements" };
+// #achievements is a spot on the home page; every other page opens at the top
+const SPOTS = { achievements: "#achievements" };
 function jump(onLoad) {
   const el = (k => SPOTS[k] && document.querySelector(SPOTS[k]))(decodeURIComponent(location.hash.slice(1)));
   if (el) el.scrollIntoView({ block: "start" }); else if (!onLoad) window.scrollTo(0, 0);

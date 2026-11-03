@@ -4,6 +4,7 @@
   --surface:#f8fbf9; --chip:#e8ede9; --tile:#fbfcfb; --card:#ffffff; --header-bg:rgba(255,255,255,.74);
   --btn-bg:#0f120f; --btn-fg:#ffffff; --badge:#4a98e9; --play:#57b65f; --arm:#737373; --rim:#e4e7e4;
   --gh0:#f1f1f1; --gh1:#d8d9d8; --gh2:#bcbdbc; --gh3:#959796; --gh4:#6a6c6a;
+  --accent:#7c3aed; --tr1:#1f63b0; --tr2:#2b7d4d; --tr3:#a65a0e; --tr4:#6d3fd1;
   --todo:#d6950f; --pin:#ff3b30; --thread:#7d828a; --thread-2:#b4b8be; --shadow:0 10px 30px rgba(15,18,15,.10);
   --sans:"Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono:"Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -13,6 +14,7 @@
   --surface:#131714; --chip:#1c221e; --tile:#111512; --card:#0f1210; --header-bg:rgba(11,13,11,.74);
   --btn-bg:#eef2ee; --btn-fg:#0b0d0b; --arm:#8e918e; --rim:#2a2d2a;
   --gh0:#1a1e1b; --gh1:#313833; --gh2:#525a54; --gh3:#808983; --gh4:#bcc4be;
+  --accent:#b49cff; --tr1:#8ebcf2; --tr2:#86cfa0; --tr3:#eab56a; --tr4:#b9a3ff;
   --todo:#e7b44c; --pin:#ff453a; --thread:#8a9098; --thread-2:#5a6068; --shadow:0 10px 30px rgba(0,0,0,.45); color-scheme:dark;
 }}
 :root[data-theme="dark"]{
@@ -20,6 +22,7 @@
   --surface:#131714; --chip:#1c221e; --tile:#111512; --card:#0f1210; --header-bg:rgba(11,13,11,.74);
   --btn-bg:#eef2ee; --btn-fg:#0b0d0b; --arm:#8e918e; --rim:#2a2d2a;
   --gh0:#1a1e1b; --gh1:#313833; --gh2:#525a54; --gh3:#808983; --gh4:#bcc4be;
+  --accent:#b49cff; --tr1:#8ebcf2; --tr2:#86cfa0; --tr3:#eab56a; --tr4:#b9a3ff;
   --todo:#e7b44c; --pin:#ff453a; --thread:#8a9098; --thread-2:#5a6068; --shadow:0 10px 30px rgba(0,0,0,.45); color-scheme:dark;
 }
 
@@ -352,7 +355,39 @@ main{padding-block:16px 8px; min-height:60vh}
 .dock-search svg{width:21px; height:21px}
 
 /* Search */
-#about, #achievements{scroll-margin-top:24px}
+#achievements{scroll-margin-top:24px}
+.bio-more{display:inline-flex; align-items:center; gap:6px; margin-top:12px; font-size:15px; font-weight:500; color:var(--fg)}
+.bio-more svg{width:16px; height:16px; transition:transform .2s}
+.bio-more:hover svg{transform:translateX(3px)}
+
+/* About page */
+.ab{margin-top:28px; padding-bottom:12px}
+.ab b{color:var(--accent); font-weight:700}
+.ab-title{margin:0; font-size:clamp(32px, 7.6vw, 46px); line-height:1.08; font-weight:800; letter-spacing:-.045em; max-width:17ch; text-wrap:balance}
+.ab-lead{margin:22px 0 0; font-size:18px; line-height:1.68; color:var(--muted)}
+.ab-quote{margin:30px 0 0; padding:2px 0 2px 20px; border-left:2px solid var(--line); font-style:italic; font-size:16.5px; line-height:1.72; color:var(--muted)}
+.ab-traits{display:flex; align-items:center; gap:6px; margin-top:32px}
+.ab-pills{flex:0 1 auto; min-width:0; display:flex; flex-wrap:wrap; gap:6px}
+.ab-rule{flex:1 1 0; min-width:0; height:1px; background:var(--line)}
+.ab-pill{padding:5px 10.5px; border-radius:999px; font-size:14px; font-weight:500; color:var(--c);
+  background:color-mix(in srgb, var(--c) 8%, var(--bg)); border:1px solid color-mix(in srgb, var(--c) 30%, var(--bg))}
+.ab-facts{margin:30px 0 0; padding-top:24px; border-top:1px solid var(--line); display:grid; gap:20px}
+.ab-facts dt{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.ab-facts dd{margin:5px 0 0; font-size:16.5px; line-height:1.45; color:var(--fg)}
+.ab-h{margin:62px 0 0; font-size:27px; line-height:1.15; font-weight:700; letter-spacing:-.035em}
+.ab-p{margin:18px 0 0; font-size:16.5px; line-height:1.74; color:var(--muted)}
+.ab-cards{display:grid; gap:16px; margin-top:22px}
+.ab-card{border:1px solid var(--line); border-radius:16px; background:var(--card); padding:20px 20px 22px}
+.ab-card h3{margin:0; font-size:18px; font-weight:600; letter-spacing:-.015em}
+.ab-card p{margin:10px 0 0; font-size:15.5px; line-height:1.66; color:var(--muted)}
+.ab-connect{margin-top:64px; border:1px solid var(--line); border-radius:20px; background:var(--card); padding:26px 24px 28px}
+.ab-connect h2{margin:0; font-size:25px; font-weight:700; letter-spacing:-.035em}
+.ab-connect p{margin:8px 0 0; font-size:16px; line-height:1.62; color:var(--muted)}
+.ab-links{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+.ab-links a{width:44px; height:44px; border-radius:12px; border:1px solid var(--line); display:grid; place-items:center; color:var(--fg); transition:background .15s}
+.ab-links a:hover{background:var(--chip)}
+.ab-links svg{width:20px; height:20px}
+@media (min-width:640px){ .ab-cards{grid-template-columns:1fr 1fr} .ab-facts{grid-template-columns:.8fr 1.1fr 1.1fr; gap:22px} .ab-pills{gap:8px} .ab-pill{padding:5px 14px; font-size:14.5px} }
 /* Resume page: the CV drawn as paper sheets */
 .cv-head{display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap}
 .cv-head .h2{margin:0}

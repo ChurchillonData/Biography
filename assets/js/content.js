@@ -207,3 +207,34 @@ const AWARDS = [
   { title: "Government of Ghana Scholarship", issuer: "Ghana Scholarships Secretariat", year: "2024",
     desc: "Sponsored my MSc in Data Science at Loughborough University.", logo: { img: "ghana", border: true } }
 ];
+
+// About page. Wrap words in **double stars** to give them the accent colour.
+const ABOUT = {
+  title: "From economics to research on how AI makes decisions.",
+  lead: "I'm Emmanuel Boakye, an **AI researcher** and **data scientist** based in London. I work on **recommender systems** and **information retrieval**, the technology that decides what people see and what they are offered. I care about making those decisions **accurate** and **explainable**.",
+  quote: "I believe the most useful result is often the one that proves my first idea wrong.",
+  traits: ["Curious", "Rigorous", "Honest", "Persistent"],
+  facts: [
+    ["Location", "London, United Kingdom"],
+    ["Status", "Open to AI/ML research and applied AI opportunities"],
+    ["Focus", "Recommender systems · Information retrieval · Trustworthy AI"]
+  ],
+  started: [
+    "It started with **economics** at the University of Cape Coast in Ghana. I liked questions about how people make choices. Statistics gave me a way to test my answers instead of guessing.",
+    "My first jobs put data in front of real decisions. At **CalBank** I tracked deposits, loans and risk for the finance team. During national service I checked student records so staff could trust their reports. Both taught me that a decision is only as good as the data behind it.",
+    "I then had the opportunity to study on a scholarship at **Loughborough University**, where I completed an MSc in Data Science. That is where I moved into **AI research**. I built recommender systems and worked with **Health Data Research UK** on models for critically ill patients.",
+    "The more I built, the more one lesson repeated itself. An impressive number is a reason to look closer. Now I study why AI systems that rank and recommend go wrong, and how to make them **trustworthy**."
+  ],
+  work: [
+    ["Stay curious", "AI moves fast. I keep up by reading papers, running small experiments and asking people a few steps ahead of me."],
+    ["Test early, then refine", "A quick experiment beats a perfect plan. I'd rather learn from real results than polish an idea for months."],
+    ["Question the result", "A strong score is a reason to look closer. I check the data and the setup before I trust any number."],
+    ["Build for people", "Technology is a means to an end. If it doesn't help someone make a better decision, it doesn't count."]
+  ],
+  heading: "Search and recommendation are turning into **conversations**, and **healthcare** is where that shift matters most. My own work showed rankers leaning on **what is popular**. In medicine that habit favours **the common diagnosis** and misses the rare patient. I want to help build conversational retrieval and recommendation that stays **grounded** as a conversation grows and still finds **the uncommon case**.",
+  beyond: [
+    "I lead a learning track with **Grow with Google** and **Mentor Me Collective**, guiding a group of 12 through Google's Advanced Data Analytics certificate. Explaining an idea to someone else is the best test of whether I understand it.",
+    "I also enjoy **hackathons**, where a weekend and a good team can turn a rough idea into something real."
+  ],
+  connect: "Want to talk about research, work on a paper together or just say hi? I'd love to hear from you."
+};
