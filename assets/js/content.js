@@ -213,7 +213,7 @@ const ABOUT = {
   title: "From economics to research on how AI makes decisions.",
   lead: "I'm Emmanuel Boakye, an **AI researcher** and **data scientist** based in London. I work on **recommender systems** and **information retrieval**, the technology that decides what people see and what they are offered. I care about making those decisions **accurate** and **explainable**.",
   quote: "I believe the most useful result is often the one that proves my first idea wrong.",
-  traits: ["Curious", "Rigorous", "Honest", "Persistent"],
+  traits: ["Curious", "Rigorous", "Grounded", "Persistent"],
   facts: [
     ["Location", "London, United Kingdom"],
     ["Status", "Open to AI/ML research and applied AI opportunities"],
