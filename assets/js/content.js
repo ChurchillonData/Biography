@@ -43,7 +43,9 @@ const ASSETS = {
   "book_talk": "assets/img/books/think-faster-talk-smarter.jpg",
   "book_talk_size": [634, 960],
   "book_rich": "assets/img/books/think-and-grow-rich.jpg",
-  "book_rich_size": [640, 912
+  "book_rich_size": [640, 912],
+  "book_zero": "assets/img/books/zero-to-one.jpg",
+  "book_zero_size": [612, 960
   ]
 };
 
@@ -227,6 +229,7 @@ const BOOKS = {
   list: [
     { title: "The Alchemist", author: "Paulo Coelho", img: "book_alchemist" },
     { title: "The Psychology of Money", author: "Morgan Housel", img: "book_money" },
+    { title: "Zero to One", author: "Peter Thiel with Blake Masters", img: "book_zero" },
     { title: "The Secret", author: "Rhonda Byrne", img: "book_secret" },
     { title: "Deep Work", author: "Cal Newport", img: "book_deepwork" },
     { title: "Think Faster, Talk Smarter", author: "Matt Abrahams", img: "book_talk" },
